@@ -1,10 +1,10 @@
 # Heart Disease Predictor
 
 ## Authors
-* [Stephanie Wu]
-* [Albert Halim]
-* [Rongze Liu]
-* [Ziyuan Zhao]
+* Stephanie Wu
+* Albert Halim
+* Rongze Liu
+* Ziyuan Zhao
 
 ----
 
