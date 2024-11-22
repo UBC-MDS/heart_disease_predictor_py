@@ -10,5 +10,6 @@ dependencies:
   - ipython
   - scikit-learn>=1.5.1
   - notebook=6.5.4
+  - jupyterlab
   - altair-all
   - jupyter_contrib_nbextensions=0.7.0
