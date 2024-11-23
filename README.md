@@ -116,7 +116,7 @@ For a complete list of dependencies, refer to the `environment.yml` file.
 
 ## License
 
-The Heart Disease Predictor project and its content are licensed under the MIT License. If you use or re-mix any part of this project, please provide appropriate attribution.
+The Heart Disease Predictor project and its content are licensed under the CC0 License. If you use or re-mix any part of this project, please provide appropriate attribution.
 
 ## References
 
