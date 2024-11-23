@@ -120,9 +120,12 @@ The Heart Disease Predictor project and its content are licensed under the CC0 L
 
 ## References
 
-- Dua, Dheeru, and Casey Graff. 2017. "UCI Machine Learning Repository." University of California, Irvine. [https://archive.ics.uci.edu/ml](https://archive.ics.uci.edu/ml).
-- Cleveland Clinic Foundation. 1988. "Heart Disease Data Set." In *Proceedings of Machine Learning and Medical Applications*.
+- Dua, D., Dheeru, D., & Graff, C. (2017). *UCI Machine Learning Repository*. University of California, Irvine. [https://archive.ics.uci.edu/ml](https://archive.ics.uci.edu/ml)
+- Cleveland Clinic Foundation. (1988). Heart disease data set. In *Proceedings of Machine Learning and Medical Applications*.
 - Attia, P. (2023, February 15). Peter on the four horsemen of chronic disease. PeterAttiaMD.com. [https://peterattiamd.com/peter-on-the-four-horsemen-of-chronic-disease/](https://peterattiamd.com/peter-on-the-four-horsemen-of-chronic-disease/)
 - Bui, T. (2024, October 15). Cardiovascular disease is rising again after years of improvement. Stat News. [https://www.statnews.com/2024/10/15/cardiovascular-disease-rising-experts-on-causes/](https://www.statnews.com/2024/10/15/cardiovascular-disease-rising-experts-on-causes/)
 - Centers for Disease Control and Prevention (CDC). (2022). Leading causes of death. National Center for Health Statistics. [https://www.cdc.gov/nchs/fastats/leading-causes-of-death.htm](https://www.cdc.gov/nchs/fastats/leading-causes-of-death.htm)
 - Detrano, R., Jánosi, A., Steinbrunn, W., Pfisterer, M., Schmid, J., Sandhu, S., Guppy, K., Lee, S., & Froelicher, V. (1988). Heart Disease UCI dataset. UC Irvine Machine Learning Repository. [https://archive.ics.uci.edu/dataset/45/heart+disease](https://archive.ics.uci.edu/dataset/45/heart+disease)
+- Carlén, A., Gustafsson, M., Åström Aneq, M., & Nylander, E. (2019). Exercise-induced ST depression in an asymptomatic population without coronary artery disease. Scandinavian Cardiovascular Journal, 53(4), 206–212. https://doi.org/10.1080/14017431.2019.1626021
+- Fuchs, F. D., & Whelton, P. K. (2020). High Blood Pressure and Cardiovascular Disease. Hypertension, 75(2), 285–292. https://doi.org/10.1161/HYPERTENSIONAHA.119.14240
+- Regitz-Zagrosek, V., & Gebhard, C. (2023). Gender medicine: Effects of sex and gender on cardiovascular disease manifestation and outcomes. Nature Reviews Cardiology, 20(4), 236–247. https://doi.org/10.1038/s41569-022-00797-4
