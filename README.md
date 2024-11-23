@@ -75,35 +75,49 @@ For a complete list of dependencies, refer to the `environment.yml` file.
     conda activate heart_disease_env
     ```
 
-3. Start Jupyter Notebook:
+3. Alternatively, create and activate the environment using `conda-lock`:
     ```bash
-    jupyter notebook
+    conda-lock install --name heart_disease_env --file conda-lock.yml
+    conda activate heart_disease_env
     ```
 
-## Usage
+4. Install additional dependencies if needed:
+    ```bash
+    conda install jupyterlab  # Install Jupyter Lab if not included
+    ```
+
+5. Start Jupyter Lab:
+    ```bash
+    jupyter lab
+    ```
 
 ### Running the Analysis
 
 1. Navigate to the root of this project on your computer using the command line.
-2. Open the Jupyter notebook:
+2. Open the Jupyter notebook to start the analysis:
     ```bash
-    src/heart_disease_predictor_report.ipynb
+    jupyter lab src/heart_disease_predictor_report.ipynb
     ```
 3. Execute the notebook cells to run the data wrangling, EDA, and modeling steps.
+   - Make sure the kernel is set to the appropriate environment (`heart_disease_env`).
+   - You can select "Restart Kernel and Run All Cells" from the "Kernel" menu to execute all steps in the analysis sequentially.
 
 ### Clean up
 - To deactivate the environment:
     ```bash
     conda deactivate
     ```
+
 ### Adding a New Dependency
 
 1. Add the new dependency to the `environment.yml` file in a separate branch.
 2. Regenerate the `conda-lock` file:
     ```bash
-    conda-lock -p linux-64 -p osx-64 --file environment.yml
+    conda-lock install --name heart_disease_env --file environment.yml
     ```
 3. Test the updated environment and push your changes.
+
+---
 
 ## License
 
@@ -113,3 +127,7 @@ The Heart Disease Predictor project and its content are licensed under the MIT L
 
 - Dua, Dheeru, and Casey Graff. 2017. "UCI Machine Learning Repository." University of California, Irvine. [https://archive.ics.uci.edu/ml](https://archive.ics.uci.edu/ml).
 - Cleveland Clinic Foundation. 1988. "Heart Disease Data Set." In *Proceedings of Machine Learning and Medical Applications*.
+- Attia, P. (2023, February 15). Peter on the four horsemen of chronic disease. PeterAttiaMD.com. [https://peterattiamd.com/peter-on-the-four-horsemen-of-chronic-disease/](https://peterattiamd.com/peter-on-the-four-horsemen-of-chronic-disease/)
+- Bui, T. (2024, October 15). Cardiovascular disease is rising again after years of improvement. Stat News. [https://www.statnews.com/2024/10/15/cardiovascular-disease-rising-experts-on-causes/](https://www.statnews.com/2024/10/15/cardiovascular-disease-rising-experts-on-causes/)
+- Centers for Disease Control and Prevention (CDC). (2022). Leading causes of death. National Center for Health Statistics. [https://www.cdc.gov/nchs/fastats/leading-causes-of-death.htm](https://www.cdc.gov/nchs/fastats/leading-causes-of-death.htm)
+- Detrano, R., Jánosi, A., Steinbrunn, W., Pfisterer, M., Schmid, J., Sandhu, S., Guppy, K., Lee, S., & Froelicher, V. (1988). Heart Disease UCI dataset. UC Irvine Machine Learning Repository. [https://archive.ics.uci.edu/dataset/45/heart+disease](https://archive.ics.uci.edu/dataset/45/heart+disease)
