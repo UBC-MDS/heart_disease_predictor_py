@@ -81,12 +81,7 @@ For a complete list of dependencies, refer to the `environment.yml` file.
     conda activate heart_disease_env
     ```
 
-4. Install additional dependencies if needed:
-    ```bash
-    conda install jupyterlab  # Install Jupyter Lab if not included
-    ```
-
-5. Start Jupyter Lab:
+4. Start Jupyter Lab:
     ```bash
     jupyter lab
     ```
