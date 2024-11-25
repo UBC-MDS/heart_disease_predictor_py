@@ -13,3 +13,4 @@ dependencies:
   - jupyterlab=4.3.1
   - altair=5.1.2
   - jupyter_contrib_nbextensions=0.7.0
+  - conda-lock=2.5.7
