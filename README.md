@@ -75,13 +75,7 @@ For a complete list of dependencies, refer to the `environment.yml` file.
     conda activate heart_disease_predictor
     ```
 
-3. Alternatively, create and activate the environment using `conda-lock`:
-    ```bash
-    conda-lock install --name heart_disease_predictor --file conda-lock.yml
-    conda activate heart_disease_predictor
-    ```
-
-4. Start Jupyter Lab:
+3. Start Jupyter Lab:
     ```bash
     jupyter lab
     ```

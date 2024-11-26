@@ -14,3 +14,4 @@ dependencies:
   - altair=5.1.2
   - jupyter_contrib_nbextensions=0.7.0
   - conda-lock=2.5.7
+  - pandera=0.21.0
