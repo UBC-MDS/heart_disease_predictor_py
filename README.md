@@ -72,16 +72,10 @@ For a complete list of dependencies, refer to the `environment.yml` file.
 2. Create and activate the environment:
     ```bash
     conda env create -f environment.yml
-    conda activate heart_disease_env
+    conda activate heart_disease_predictor
     ```
 
-3. Alternatively, create and activate the environment using `conda-lock`:
-    ```bash
-    conda-lock install --name heart_disease_env --file conda-lock.yml
-    conda activate heart_disease_env
-    ```
-
-4. Start Jupyter Lab:
+3. Start Jupyter Lab:
     ```bash
     jupyter lab
     ```
@@ -94,7 +88,7 @@ For a complete list of dependencies, refer to the `environment.yml` file.
     jupyter lab src/heart_disease_predictor_report.ipynb
     ```
 3. Execute the notebook cells to run the data wrangling, EDA, and modeling steps.
-   - Make sure the kernel is set to the appropriate environment (`heart_disease_env`).
+   - Make sure the kernel is set to the appropriate environment (`heart_disease_predictor`).
    - You can select "Restart Kernel and Run All Cells" from the "Kernel" menu to execute all steps in the analysis sequentially.
 
 ### Clean up
@@ -108,7 +102,7 @@ For a complete list of dependencies, refer to the `environment.yml` file.
 1. Add the new dependency to the `environment.yml` file in a separate branch.
 2. Regenerate the `conda-lock` file:
     ```bash
-    conda-lock install --name heart_disease_env --file environment.yml
+    conda-lock install --name heart_disease_predictor --file environment.yml
     ```
 3. Test the updated environment and push your changes.
 
@@ -116,7 +110,7 @@ For a complete list of dependencies, refer to the `environment.yml` file.
 
 ## License
 
-The Heart Disease Predictor project and its content are licensed under the CC0 License. If you use or re-mix any part of this project, please provide appropriate attribution.
+All code in the Heart Disease Predictor project is licensed under the MIT License. The project report is licensed under the CC0 1.0 Universal License. If you use or re-mix any part of this project, please provide appropriate attribution.
 
 ## References
 
