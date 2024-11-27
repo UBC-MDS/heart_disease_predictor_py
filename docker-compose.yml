@@ -1,0 +1,8 @@
+version: '3'
+services:
+  heart_disease_predictor:
+    image: achalim/heart_disease_predictor_py:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/home/jovyan/work
