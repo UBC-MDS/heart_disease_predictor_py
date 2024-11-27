@@ -61,24 +61,27 @@ For a complete list of dependencies, refer to the `environment.yml` file.
 ### Prerequisites
 - Install [Conda](https://docs.conda.io/en/latest/miniconda.html) to handle dependencies.
 
-### Setting Up the Environment
+### Using the Docker Container
 
-1. Clone this GitHub repository:
-    ```bash
-    git clone https://github.com/UBC-MDS/heart_disease_predictor_py.git
-    cd heart_disease_predictor_py
-    ```
+To simplify the setup process, we have created a Docker container that includes all necessary dependencies for the Heart Disease Predictor project. Follow the steps below to use the container:
 
-2. Create and activate the environment:
-    ```bash
-    conda env create -f environment.yml
-    conda activate heart_disease_predictor
-    ```
+1. **Pull the Docker Image**
+   - Make sure Docker is installed on your machine. You can pull the latest version of the Docker image from DockerHub by running:
+     ```bash
+     docker pull <dockerhub-username>/heart_disease_predictor:latest
+     ```
 
-3. Start Jupyter Lab:
-    ```bash
-    jupyter lab
-    ```
+2. **Run the Docker Container**
+   - To start a container instance using the pulled image, run:
+     ```bash
+     docker run -p 8888:8888 -v $(pwd):/home/jovyan/work <dockerhub-username>/heart_disease_predictor:latest
+     ```
+     - This will start a Jupyter Notebook server that you can access in your browser at `http://localhost:8888`.
+     - The `-v $(pwd):/home/jovyan/work` option mounts your current directory into the container so that you can access your project files.
+
+3. **Using Jupyter Lab**
+   - Once the container is running, Jupyter Lab should open in your browser. You can run the analysis by navigating to `src/heart_disease_predictor_report.ipynb` and executing the cells as you would on your local setup.
+
 
 ### Running the Analysis
 
@@ -90,6 +93,55 @@ For a complete list of dependencies, refer to the `environment.yml` file.
 3. Execute the notebook cells to run the data wrangling, EDA, and modeling steps.
    - Make sure the kernel is set to the appropriate environment (`heart_disease_predictor`).
    - You can select "Restart Kernel and Run All Cells" from the "Kernel" menu to execute all steps in the analysis sequentially.
+ 
+ 
+### Updating the Docker Container
+
+If there are changes in the codebase or dependencies, follow the steps below to update the container:
+
+1. **Update the Dependencies**
+   - If any changes are made to the `environment.yml` file, you must regenerate the `conda-lock` file to pin the versions of the updated dependencies:
+     ```bash
+     conda-lock install --name heart_disease_env --file environment.yml
+     ```
+
+2. **Rebuild the Docker Image**
+   - Make sure the updated `environment.yml` and `Dockerfile` reflect the latest changes, then rebuild the Docker image using the command:
+     ```bash
+     docker build -t <dockerhub-username>/heart_disease_predictor:latest .
+     ```
+
+3. **Push the Updated Image**
+   - To make the updated image available to others, push it to DockerHub:
+     ```bash
+     docker push <dockerhub-username>/heart_disease_predictor:latest
+     ```
+
+### Using Docker Compose 
+
+To simplify running multiple containers or configuring ports/volumes, Docker Compose can be used. Here is how you can use Docker Compose:
+
+1. **Docker Compose File**
+   - Create a `docker-compose.yml` file in the root of your repository that defines the services required:
+     ```yaml
+     version: '3'
+     services:
+       heart_disease_predictor:
+         image: <dockerhub-username>/heart_disease_predictor:latest
+         ports:
+           - "8888:8888"
+         volumes:
+           - .:/home/jovyan/work
+     ```
+
+2. **Running with Docker Compose**
+   - Use the following command to launch the container with Docker Compose:
+     ```bash
+     docker-compose up
+     ```
+   - This will start the container, mapping the necessary ports and volumes as specified in the `docker-compose.yml` file.
+
+
 
 ### Clean up
 - To deactivate the environment:
