@@ -68,13 +68,13 @@ To simplify the setup process, we have created a Docker container that includes 
 1. **Pull the Docker Image**
    - Make sure Docker is installed on your machine. You can pull the latest version of the Docker image from DockerHub by running:
      ```bash
-     docker pull <dockerhub-username>/heart_disease_predictor:latest
+     docker pull achalim/heart_disease_predictor_py:latest
      ```
 
 2. **Run the Docker Container**
    - To start a container instance using the pulled image, run:
      ```bash
-     docker run -p 8888:8888 -v $(pwd):/home/jovyan/work <dockerhub-username>/heart_disease_predictor:latest
+     docker run -p 8888:8888 -v $(pwd):/home/jovyan/work achalim/heart_disease_predictor_py:latest
      ```
      - This will start a Jupyter Notebook server that you can access in your browser at `http://localhost:8888`.
      - The `-v $(pwd):/home/jovyan/work` option mounts your current directory into the container so that you can access your project files.
@@ -102,19 +102,19 @@ If there are changes in the codebase or dependencies, follow the steps below to 
 1. **Update the Dependencies**
    - If any changes are made to the `environment.yml` file, you must regenerate the `conda-lock` file to pin the versions of the updated dependencies:
      ```bash
-     conda-lock install --name heart_disease_env --file environment.yml
+     conda-lock install --name heart_disease_predictor --file environment.yml
      ```
 
 2. **Rebuild the Docker Image**
    - Make sure the updated `environment.yml` and `Dockerfile` reflect the latest changes, then rebuild the Docker image using the command:
      ```bash
-     docker build -t <dockerhub-username>/heart_disease_predictor:latest .
+     docker build -t achalim/heart_disease_predictor_py:latest .
      ```
 
 3. **Push the Updated Image**
    - To make the updated image available to others, push it to DockerHub:
      ```bash
-     docker push <dockerhub-username>/heart_disease_predictor:latest
+     docker push achalim/heart_disease_predictor_py:latest
      ```
 
 ### Using Docker Compose 
@@ -127,7 +127,7 @@ To simplify running multiple containers or configuring ports/volumes, Docker Com
      version: '3'
      services:
        heart_disease_predictor:
-         image: <dockerhub-username>/heart_disease_predictor:latest
+         image: achalim/heart_disease_predictor_py:latest
          ports:
            - "8888:8888"
          volumes:
@@ -144,6 +144,10 @@ To simplify running multiple containers or configuring ports/volumes, Docker Com
 
 
 ### Clean up
+- To exit the container and delete all the resources, type Ctrl + C in the terminal, and then type
+  ```bash
+  docker compose rm
+  ```
 - To deactivate the environment:
     ```bash
     conda deactivate
