@@ -15,3 +15,6 @@ dependencies:
   - jupyter_contrib_nbextensions=0.7.0
   - conda-lock=2.5.7
   - pandera=0.21.0
+  - pip
+  - pip:
+    - deepchecks==0.18.1
