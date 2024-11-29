@@ -44,20 +44,3 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
-      - name: Update docker-compose.yml with new image tag
-        if: success()
-        run: |
-          sed -i "s|image:  achalim/heart_disease_predictor_py:.*|image:  achalim/heart_disease_predictor_py:${{ steps.meta.outputs.version }}|" docker-compose.yml
-
-      - name: Commit and push updated docker-compose.yml
-        if: success()
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet docker-compose.yml; then
-            git add docker-compose.yml
-            git commit -m "Update docker-compose.yml with new image tag"
-            git push
-          else
-            echo "No changes to commit"
-          fi
