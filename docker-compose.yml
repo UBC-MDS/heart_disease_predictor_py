@@ -1,7 +1,7 @@
 version: '3'
 services:
   heart_disease_predictor:
-    image: achalim/heart_disease_predictor_py:latest
+    image: achalim/heart_disease_predictor_py:2010b8b
     ports:
       - "8888:8888"
     volumes:
