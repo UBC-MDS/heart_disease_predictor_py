@@ -10,7 +10,7 @@ import pandas as pd
 import warnings
 import matplotlib.pyplot as plt
 from sklearn import set_config
-from sklearn.model_selection import RandomizedSearchCV, cross_val_score, cross_validate
+from sklearn.model_selection import RandomizedSearchCV, cross_validate
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -241,6 +241,15 @@ def main(train_set, preprocessor, pipeline_to, plot_to, seed):
     # Save the validation scores as an image
     save_table_as_image(best_model_cv_results_df, 10, 6, plot_to, "best_model_cv_results.png")
     
-     
+    # Export both fitted SVC and LR model with pickle
+    best_svc_model = best_model_pipes["SVC"]
+    best_lr_model = best_model_pipes["Logistic Regression"]
+    
+    with open(os.path.join(pipeline_to, "heart_disease_svc_pipeline.pickle"), 'wb') as f:
+        pickle.dump(best_svc_model, f)
+    with open(os.path.join(pipeline_to, "heart_disease_lr_pipeline.pickle"), 'wb') as f:
+        pickle.dump(best_lr_model, f)
+
+
 if __name__ == "__main__":
     main()
