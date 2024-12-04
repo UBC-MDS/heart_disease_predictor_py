@@ -130,3 +130,40 @@ def save_table_as_image(df: pd.DataFrame, width: int, height: int, output_dir: s
     # Save the table as an image
     plt.savefig(os.path.join(output_dir, filename), bbox_inches='tight', dpi=300)
     plt.close()
+
+
+@click.command()
+@click.option('--train-set', type=str, help="Path to train set")
+@click.option('--preprocessor', type=str, help="Path to preprocessor object")
+@click.option('--pipeline-to', type=str, help="Path where the pipeline object will be saved")
+@click.option('--plot-to', type=str, help="Path where the plot will be saved")
+@click.option('--seed', type=int, help="Random seed for reproducibility", default=522)
+def main(train_set, preprocessor, pipeline_to, plot_to, seed):
+    '''summary here
+    '''
+    np.random.seed(seed)
+    set_config(transform_output="pandas")
+
+    # Read training set and preprocessor
+    heart_disease_train = pd.read_csv(train_set)
+    heart_disease_preprocessor = pickle.load(open(preprocessor, "rb"))
+
+    # Validate if there are anomalous correlations
+    # between target and explanatory variables
+    categorical_features = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal']
+    heart_disease_ds = Dataset(heart_disease_train, label='num', cat_features=categorical_features)
+    check_feat_lab_corr = FeatureLabelCorrelation().add_condition_feature_pps_less_than(0.9)
+    check_feat_lab_corr_result = check_feat_lab_corr.run(dataset=heart_disease_ds)
+    if not check_feat_lab_corr_result.passed_conditions():
+        raise ValueError("Feature-Target correlation exceeds the maximum acceptable threshold.")
+
+    # Validate if there are anomalous correlations
+    # between explanatory variables
+    check_feat_feat_corr = FeatureFeatureCorrelation().add_condition_max_number_of_pairs_above_threshold(threshold = 0.9, n_pairs = 0)
+    check_feat_feat_corr_result = check_feat_feat_corr.run(dataset=heart_disease_ds)
+    if not check_feat_feat_corr_result.passed_conditions():
+        raise ValueError("Feature-Feature correlation exceeds the maximum acceptable threshold.")
+    
+
+if __name__ == "__main__":
+    main()
