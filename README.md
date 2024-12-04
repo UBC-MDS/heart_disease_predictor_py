@@ -92,8 +92,8 @@ python scripts/download_data.py --url="https://archive.ics.uci.edu/static/public
 ```
 3. To render the Quarto markdown file to html and pdf, use the following commands:
 ```
-quarto render src/breast_cancer_predictor_report.qmd --to html
-quarto render src/breast_cancer_predictor_report.qmd --to pdf
+quarto render src/heart_disease_predictor_report.qmd --to html
+quarto render src/heart_disease_predictor_report.qmd --to pdf
 ```
  
  
