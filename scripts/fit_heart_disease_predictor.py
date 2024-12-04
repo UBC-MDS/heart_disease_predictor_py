@@ -55,7 +55,7 @@ def mean_std_cross_val_scores(model, X_train, y_train, **kwargs):
 
 
 # Perform RandomizedSearchCV to find the best model
-def randomized_search(X_train, y_train, model, param_dist, n_iter=100, cv=5, random_state=123):
+def randomized_search_best(X_train, y_train, model, param_dist, n_iter=100, cv=5, random_state=123):
     """
     Performs RandomizedSearchCV on the 
     specified model and returns the best model.
@@ -164,6 +164,83 @@ def main(train_set, preprocessor, pipeline_to, plot_to, seed):
     if not check_feat_feat_corr_result.passed_conditions():
         raise ValueError("Feature-Feature correlation exceeds the maximum acceptable threshold.")
     
+    # Modelling
+    X_train = heart_disease_train.drop(columns=["num"])
+    y_train = heart_disease_train["num"]
+    results_dict = {}
+    
+    models = {
+        "Dummy": DummyClassifier(random_state=123),
+        "Decision tree": DecisionTreeClassifier(random_state=123),
+        "SVC": SVC(random_state=123),
+        "Logistic Regression": LogisticRegression(random_state=123, max_iter=1000)
+    }
 
+    for model in models.items():
+        pipe = make_pipeline(heart_disease_preprocessor, model[1])
+        results_dict[model[0]] = mean_std_cross_val_scores(
+            pipe, X_train, y_train, cv=5, return_train_score=True
+        )
+    
+    # Cross-validation results of baseline models
+    cv_results_df = pd.DataFrame(results_dict).T
+
+    # Save the validation scores as an image
+    save_table_as_image(cv_results_df, 10, 6, plot_to, "baseline_cv_results.png")
+
+    # Models and their parameter grids
+    models_params = {
+        "Decision Tree": {
+            "pipe": Pipeline(steps=[
+                ("preprocessor", heart_disease_preprocessor),
+                ("dt", DecisionTreeClassifier(random_state=123))
+            ]),
+            "param_grid": {
+                "dt__max_depth": [i for i in range(1, 101)],
+                "dt__class_weight": [None, "balanced"]
+            }
+        },
+        "SVC": {
+            "pipe": Pipeline(steps=[
+                ("preprocessor", heart_disease_preprocessor),
+                ("svc", SVC(random_state=123))
+            ]),
+            "param_grid": {
+                "svc__gamma": loguniform(1e-4, 1e3),
+                "svc__C": loguniform(1e-4, 1e3),
+                "svc__class_weight": [None, "balanced"]
+            }
+        },
+        "Logistic Regression": {
+            "pipe": Pipeline(steps=[
+                ("preprocessor", heart_disease_preprocessor),
+                ("lr", LogisticRegression(random_state=123, max_iter=1000))
+            ]),
+            "param_grid": {
+                "lr__C": loguniform(1e-4, 1e3),
+                "lr__class_weight": [None, "balanced"]
+            }
+        }
+    }
+    
+    # Tune models and store the best-model pipelines
+    best_model_pipes = {
+        model_name: randomized_search_best(X_train, y_train, model["pipe"], model["param_grid"])
+        for model_name, model in models_params.items()
+    }
+    
+    # Evaludate the tuned models using cross-validation
+    results_dict = {
+        model_name: mean_std_cross_val_scores(pipe, X_train, y_train, cv=5, return_train_score=True)
+        for model_name, pipe in best_model_pipes.items()
+    }
+    
+    # Cross-validation results for each best-model pipeline
+    best_model_cv_results_df = pd.DataFrame(results_dict).T
+    
+    # Save the validation scores as an image
+    save_table_as_image(best_model_cv_results_df, 10, 6, plot_to, "best_model_cv_results.png")
+    
+     
 if __name__ == "__main__":
     main()
