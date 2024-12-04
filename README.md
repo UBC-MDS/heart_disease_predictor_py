@@ -86,13 +86,15 @@ To simplify the setup process, we have created a Docker container that includes 
 ### Running the Analysis
 
 1. Navigate to the root of this project on your computer using the command line.
-2. Open the Jupyter notebook to start the analysis:
-    ```bash
-    jupyter lab src/heart_disease_predictor_report.ipynb
-    ```
-3. Execute the notebook cells to run the data wrangling, EDA, and modeling steps.
-   - Make sure the kernel is set to the appropriate environment (`heart_disease_predictor`).
-   - You can select "Restart Kernel and Run All Cells" from the "Kernel" menu to execute all steps in the analysis sequentially.
+2. To run the analysis, run the following commands:
+```
+python scripts/download_data.py --url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" --path="data/raw"
+```
+3. To render the Quarto markdown file to html and pdf, use the following commands:
+```
+quarto render src/breast_cancer_predictor_report.qmd --to html
+quarto render src/breast_cancer_predictor_report.qmd --to pdf
+```
  
  
 ### Updating the Docker Container
