@@ -1,6 +1,6 @@
 # fit_heart_disease_predictor.py
 # author: Archer Liu
-# date: 2024-12-03
+# date: 2024-12-04
 
 import os
 import click
@@ -96,49 +96,13 @@ def randomized_search_best(X_train, y_train, model, param_dist, n_iter=100, cv=5
     return random_search.best_estimator_
 
 
-# Save pandas DataFrame as image
-def save_table_as_image(df: pd.DataFrame, width: int, height: int, output_dir: str, filename: str):
-    """
-    Saves a DataFrame as an image.
-    
-    Parameters:
-    df : pandas.DataFrame
-        The DataFrame to be saved as an image.
-    width : int
-        The width of the image.
-    height : int
-        The height of the image.
-    plot_to : str
-        The path where the image will be saved.
-    filename : str
-        The name of the image file to save.
-
-    Returns:
-    None
-    """
-    
-    _, ax = plt.subplots(figsize=(width, height))
-
-    # Adjust the outlook of the table
-    ax.axis('tight')
-    ax.axis('off')
-    ax.table(cellText=df.values,
-             rowLabels=df.index,
-             colLabels=df.columns,
-             loc='center')
-
-    # Save the table as an image
-    plt.savefig(os.path.join(output_dir, filename), bbox_inches='tight', dpi=300)
-    plt.close()
-
-
 @click.command()
 @click.option('--train-set', type=str, help="Path to train set")
 @click.option('--preprocessor', type=str, help="Path to preprocessor object")
 @click.option('--pipeline-to', type=str, help="Path where the pipeline object will be saved")
-@click.option('--plot-to', type=str, help="Path where the plot will be saved")
+@click.option('--table-to', type=str, help="Path where the table will be saved")
 @click.option('--seed', type=int, help="Random seed for reproducibility", default=522)
-def main(train_set, preprocessor, pipeline_to, plot_to, seed):
+def main(train_set, preprocessor, pipeline_to, table_to, seed):
     '''summary here
     '''
     np.random.seed(seed)
@@ -185,8 +149,8 @@ def main(train_set, preprocessor, pipeline_to, plot_to, seed):
     # Cross-validation results of baseline models
     cv_results_df = pd.DataFrame(results_dict).T
 
-    # Save the validation scores as an image
-    save_table_as_image(cv_results_df, 10, 6, plot_to, "baseline_cv_results.png")
+    # Save the validation scores as a csv
+    cv_results_df.to_csv(os.path.join(table_to, "baseline_cv_results.csv"))
 
     # Models and their parameter grids
     models_params = {
@@ -238,8 +202,8 @@ def main(train_set, preprocessor, pipeline_to, plot_to, seed):
     # Cross-validation results for each best-model pipeline
     best_model_cv_results_df = pd.DataFrame(results_dict).T
     
-    # Save the validation scores as an image
-    save_table_as_image(best_model_cv_results_df, 10, 6, plot_to, "best_model_cv_results.png")
+    # Save the validation scores as a csv
+    best_model_cv_results_df.to_csv(os.path.join(table_to, "best_model_cv_results.csv"))
     
     # Export both fitted SVC and LR model with pickle
     best_svc_model = best_model_pipes["SVC"]
