@@ -1,17 +1,13 @@
-#Ziyuan Zhao
-#script_eda.py
-
 # Exploratory Data Analysis (EDA) Script
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import argparse
 import os
 
 # Define function to perform EDA
 def perform_eda(input_data_path, output_prefix):
-    # Load the dataset
+    # Load the cleaned and validated dataset
     data = pd.read_csv(input_data_path)
 
     # Set up directories for saving outputs
@@ -23,17 +19,14 @@ def perform_eda(input_data_path, output_prefix):
     summary_stats = data.describe()
     summary_stats.to_csv(f"{output_prefix}_summary_stats.csv")
 
-    # Pairplot for feature distributions
-    plt.figure(figsize=(12, 10))
-    sns.pairplot(data)
-    plt.savefig(f"{output_prefix}_pairplot.png")
-    plt.close()
-
     # Correlation heatmap
     plt.figure(figsize=(10, 8))
     correlation_matrix = data.corr()
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+    plt.imshow(correlation_matrix, cmap='coolwarm', interpolation='nearest')
+    plt.colorbar()
     plt.title('Feature Correlation Heatmap')
+    plt.xticks(range(len(correlation_matrix)), correlation_matrix.columns, rotation=90)
+    plt.yticks(range(len(correlation_matrix)), correlation_matrix.columns)
     plt.savefig(f"{output_prefix}_correlation_heatmap.png")
     plt.close()
 
@@ -51,7 +44,7 @@ def perform_eda(input_data_path, output_prefix):
     # Boxplot for detecting outliers in each numeric column
     for col in numeric_cols:
         plt.figure()
-        sns.boxplot(data[col])
+        data[col].plot(kind='box')
         plt.title(f'Boxplot of {col}')
         plt.savefig(f"{output_prefix}_{col}_boxplot.png")
         plt.close()
