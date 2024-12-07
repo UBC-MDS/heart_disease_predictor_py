@@ -1,6 +1,6 @@
 # fit_heart_disease_predictor.py
 # author: Archer Liu
-# date: 2024-12-05
+# date: 2024-12-07
 
 import os
 import click
@@ -65,21 +65,28 @@ def dump_pipeline(pipeline, file_name, path):
 
 
 # Save data frame as csv
-def save_df_to_csv(df, dir_path, file_name):
+def save_df_to_csv(df, dir_path, file_name, index=True):
     """
     Save a DataFrame to a CSV file in a specified directory.
 
     Parameters:
+    ----------
     - df: pandas.DataFrame
         The DataFrame to save.
     - dir_path: str
         The directory where the CSV file will be saved.
     - file_name: str
         The name of the CSV file.
+    - index: bool
+        Whether to keep index or not.
+
+    Returns
+    ----------
+    None
     """
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
-    df.to_csv(os.path.join(dir_path, file_name))
+    df.to_csv(os.path.join(dir_path, file_name), index=index)
 
 
 # Validate feature-label correlation
@@ -211,9 +218,10 @@ def randomized_search_best(X_train, y_train, model, param_dist, n_iter=100, cv=5
     specified model and returns the best model.
 
     Parameters:
-    X_train : DataFrame
+    ----------
+    X_train : pandas.DataFrame
         Training features
-    y_train : Series
+    y_train : pandas.Series
         Training labels
     model : estimator
         The model to be tuned
@@ -227,6 +235,7 @@ def randomized_search_best(X_train, y_train, model, param_dist, n_iter=100, cv=5
         Random seed for reproducibility
 
     Returns:
+    ----------
     best_model : estimator
         The best model after RandomizedSearchCV
     """
@@ -292,9 +301,6 @@ def main(train_set, preprocessor, pipeline_to, table_to, seed):
 
     # Save the validation scores as a csv
     save_df_to_csv(cv_results_df, table_to, "baseline_cv_results.csv")
-    # if not os.path.exists(table_to):
-    #     os.makedirs(table_to)
-    # cv_results_df.to_csv(os.path.join(table_to, "baseline_cv_results.csv"))
 
     # Models and their parameter grids
     models_params = {
@@ -348,9 +354,6 @@ def main(train_set, preprocessor, pipeline_to, table_to, seed):
 
     # Save the validation scores as a csv
     save_df_to_csv(best_model_cv_results_df, table_to, "best_model_cv_results.csv")
-    # if not os.path.exists(table_to):
-    #     os.makedirs(table_to)
-    # best_model_cv_results_df.to_csv(os.path.join(table_to, "best_model_cv_results.csv"))
 
     # Export both fitted SVC and LR model with pickle
     dump_pipeline(
