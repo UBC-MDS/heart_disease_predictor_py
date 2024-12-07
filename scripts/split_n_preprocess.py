@@ -5,10 +5,15 @@ import requests
 import zipfile
 import numpy as np
 import pandera as pa
+import pickle
 from pandera import Column, Check, DataFrameSchema
 import warnings
 from sklearn import set_config
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.compose import make_column_transformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -144,16 +149,94 @@ def save_processed_data(heart_disease_train, heart_disease_test, processed_dir):
     heart_disease_train.to_csv(os.path.join(processed_dir, "heart_disease_train.csv"), index=False)
     heart_disease_test.to_csv(os.path.join(processed_dir, "heart_disease_test.csv"), index=False)
 
+def create_ca_pipeline():
+    """
+    Create a pipeline for handling the 'ca' column.
+    
+    Returns:
+        Pipeline: Pipeline for imputing and scaling 'ca'.
+    """
+    return make_pipeline(
+        SimpleImputer(strategy="most_frequent"),
+        StandardScaler()
+    )
+
+def create_thal_pipeline():
+    """
+    Create a pipeline for handling the 'thal' column.
+    
+    Returns:
+        Pipeline: Pipeline for imputing and one-hot encoding 'thal'.
+    """
+    return make_pipeline(
+        SimpleImputer(strategy="most_frequent"),
+        OneHotEncoder(sparse_output=False)
+    )
+
+def create_preprocessor():
+    """
+    Create a column transformer for the heart disease dataset.
+    
+    Returns:
+        ColumnTransformer: Preprocessor for scaling, encoding, and imputing features.
+    """
+    ca_pipeline = create_ca_pipeline()
+    thal_pipeline = create_thal_pipeline()
+    
+    return make_column_transformer(
+        (ca_pipeline, ['ca']),  # Apply imputation and scaling to 'ca'
+        (thal_pipeline, ['thal']),  # Apply imputation and encoding to 'thal'
+        (OneHotEncoder(sparse_output=False), ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope']),
+        (StandardScaler(), ["age", "trestbps", "chol", "thalach", "oldpeak"]),
+        remainder='passthrough',
+        verbose_feature_names_out=True
+    )
+
+def save_preprocessor(preprocessor, preprocessor_dir, filename="heart_disease_preprocessor.pickle"):
+    """
+    Save the preprocessor object to a pickle file.
+    
+    Args:
+        preprocessor: Preprocessor to save.
+        preprocessor_dir (str): Directory to save the preprocessor file.
+        filename (str): Name of the pickle file. Defaults to 'heart_disease_preprocessor.pickle'.
+    """
+    if not os.path.exists(preprocessor_dir):
+        os.makedirs(preprocessor_dir)
+    pickle.dump(preprocessor, open(os.path.join(preprocessor_dir, filename), "wb"))
+
+def scale_and_save_data(preprocessor, train_data, test_data, data_dir):
+    """
+    Scale the train and test datasets using the preprocessor and save them to CSV files.
+    
+    Args:
+        preprocessor: Preprocessor to apply transformations.
+        train_data (pd.DataFrame): Training dataset.
+        test_data (pd.DataFrame): Testing dataset.
+        data_dir (str): Directory to save the scaled datasets.
+    """
+    scaled_train = preprocessor.transform(train_data)
+    scaled_test = preprocessor.transform(test_data)
+    
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+    scaled_train.to_csv(os.path.join(data_dir, "scaled_heart_disease_train.csv"), index=False)
+    scaled_test.to_csv(os.path.join(data_dir, "scaled_heart_disease_test.csv"), index=False)
+
+
 @click.command()
-@click.option('--input_path', required=True)
-@click.option('--output_dir', required=True)
-def main(input_path, output_dir):
+@click.option('--input_path', required=True, help="Path to input file")
+@click.option('--data_dir', required=True, help="Path directory to processed data")
+@click.option('--preprocessor_dir', required=True, help="Path directory to preprocessor")
+@click.option('--seed', type=int, default=123, help="Random Seed")
+def main(input_path, data_dir, preprocessor_dir, seed):
     """
     Main function to load, process, validate, and save the heart disease dataset.
     
     Args:
         input_path (str): Path to the input dataset file.
-        output_dir (str): Directory to save the processed datasets.
+        data_dir (str): Directory to save the processed datasets.
+        preprocessor_dir (str): Directory for the preprocessor result
     
     Returns:
         None: Executes the entire pipeline.
@@ -181,13 +264,21 @@ def main(input_path, output_dir):
     validate_schema(heart_disease)
     process_target_variable(heart_disease)
     
-    np.random.seed(522)
+    np.random.seed(seed)
     set_config(transform_output="pandas")
     heart_disease_train, heart_disease_test = train_test_split(
         heart_disease, train_size=0.70, stratify=heart_disease["num"]
     )
     
-    save_processed_data(heart_disease_train, heart_disease_test, output_dir)
+    save_processed_data(heart_disease_train, heart_disease_test, data_dir)
+
+    # Create and save the preprocessor
+    heart_disease_preprocessor = create_preprocessor()
+    save_preprocessor(heart_disease_preprocessor, preprocessor_dir)
+
+    # Fit and scale the datasets, then save them
+    heart_disease_preprocessor.fit(heart_disease_train)
+    scale_and_save_data(heart_disease_preprocessor, heart_disease_train, heart_disease_test, data_dir)
 
 if __name__ == '__main__':
     main()
