@@ -58,8 +58,28 @@ def dump_pipeline(pipeline, file_name, path):
     ----------
     None
     """
+    if not os.path.exists(path):
+        os.makedirs(path)
     with open(os.path.join(path, file_name), 'wb') as f:
         pickle.dump(pipeline, f)
+
+
+# Save data frame as csv
+def save_df_to_csv(df, dir_path, file_name):
+    """
+    Save a DataFrame to a CSV file in a specified directory.
+
+    Parameters:
+    - df: pandas.DataFrame
+        The DataFrame to save.
+    - dir_path: str
+        The directory where the CSV file will be saved.
+    - file_name: str
+        The name of the CSV file.
+    """
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    df.to_csv(os.path.join(dir_path, file_name))
 
 
 # Validate feature-label correlation
@@ -271,7 +291,10 @@ def main(train_set, preprocessor, pipeline_to, table_to, seed):
     )
 
     # Save the validation scores as a csv
-    cv_results_df.to_csv(os.path.join(table_to, "baseline_cv_results.csv"))
+    save_df_to_csv(cv_results_df, table_to, "baseline_cv_results.csv")
+    # if not os.path.exists(table_to):
+    #     os.makedirs(table_to)
+    # cv_results_df.to_csv(os.path.join(table_to, "baseline_cv_results.csv"))
 
     # Models and their parameter grids
     models_params = {
@@ -324,7 +347,10 @@ def main(train_set, preprocessor, pipeline_to, table_to, seed):
     best_model_cv_results_df = pd.DataFrame(results_dict).T
 
     # Save the validation scores as a csv
-    best_model_cv_results_df.to_csv(os.path.join(table_to, "best_model_cv_results.csv"))
+    save_df_to_csv(best_model_cv_results_df, table_to, "best_model_cv_results.csv")
+    # if not os.path.exists(table_to):
+    #     os.makedirs(table_to)
+    # best_model_cv_results_df.to_csv(os.path.join(table_to, "best_model_cv_results.csv"))
 
     # Export both fitted SVC and LR model with pickle
     dump_pipeline(

@@ -49,19 +49,19 @@ def compute_model_accuracy(pipeline, test_set, target_column="num"):
 
 
 @click.command()
-@click.option('--scaled-test-set', type=str, help="Path to scaled test set")
+@click.option('--test-set', type=str, help="Path to test set")
 @click.option('--pipeline-svc-from', type=str, help="Path to the SVC pipeline object")
 @click.option('--pipeline-lr-from', type=str, help="Path to the LR pipeline object")
 @click.option('--results-to', type=str, help="Path where the results will be saved")
 @click.option('--seed', type=int, help="Random seed for reproducibility", default=522)
-def main(scaled_test_set, pipeline_svc_from, pipeline_lr_from, results_to, seed):
+def main(test_set, pipeline_svc_from, pipeline_lr_from, results_to, seed):
     '''Evaluates the performance of the heart disease
     model on the test set and saves the outputs.'''
     np.random.seed(seed)
     set_config(transform_output="pandas")
 
     # Read testing set and the pipeline objects
-    heart_disease_test = pd.read_csv(scaled_test_set)
+    heart_disease_test = pd.read_csv(test_set)
     heart_disease_svc_fit = load_pipeline(pipeline_svc_from)
     heart_disease_lr_fit = load_pipeline(pipeline_lr_from)
 
