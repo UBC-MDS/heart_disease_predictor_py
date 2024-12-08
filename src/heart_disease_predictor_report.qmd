@@ -1,75 +1,23 @@
 ---
 title: Predicting Heart Disease from Cleveland Database
 jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.16.4
   kernelspec:
-    display_name: 'Python [conda env:heart_disease_predictor]'
+    display_name: Python 3 (ipykernel)
     language: python
-    name: conda-env-heart_disease_predictor-py
+    name: python3
 toc: true
-toc-title: "Table of Contents"
+toc-title: Table of Contents
 toc-depth: 3
 number-sections: true
 bibliography: references.bib
 link-citations: true
 ---
-
-
-Authors: Albert C. Halim, Archer Liu, Stephanie Wu, & Ziyuan Zhao  
-Date: November 29, 2024
-
-
-# Summary
-
-In this project, we developed and evaluated several classification models to predict the presence of heart disease using the Cleveland Heart Disease dataset, which includes various clinical features. We compared four models: Logistic Regression, Support Vector Classifier (SVC), Dummy Classifier (as a baseline), and Decision Tree Classifier. Logistic Regression performed the best, achieving high accuracy of `0.83517` and providing interpretable coefficients that helped us understand the impact of each feature on heart disease prediction. The SVC also performed well but slightly lagged behind Logistic Regression in test accuracy with 0.82418. The Dummy Classifier served as a baseline, emphasizing the need for more sophisticated models, while the Decision Tree Classifier showed reasonable performance but tended to overfit. Misclassifications were analyzed to identify potential feature engineering opportunities, and future work could include exploring alternative classifiers such as Random Forests. Additionally, incorporating probability estimates into predictions would enhance the model's clinical usability, providing clinicians with more confidence in the results.
-
-# Introduction
-
-According to a 2022 CDC federal report, the leading cause of death in the United States is heart disease [@CDC2022]. At 702,880 deaths that year, the disease claimed the most lives out of popular longevity doctor Peter Attia's so-called four horsemen, and nearly as many as cancer and diabetes (two of his other horsemen) combined [@Attia2023]. Despite past efforts having led to promising declines in mortality rates, the disease has gained traction within the last 5 years in particular [@Bui2024]. As such, early detection of heart disease, not to mention increased understanding of and heightened mindfulness around mitigating the risk factors for heart disease, can help improve countless lives in the United States and elsewhere.
-
-Here we ask if we can use a machine learning algorithm to predict whether an individual has the presence of heart disease given a relevant selection of their bioinformatic data. Answering this question is important because both patients and their health teams can seek to benefit from tooling and technologies that help in the diagnostic process of such a prevalent disease. Given such prevalence, not to mention the potential gravity of heart-related conditions, detecting heart disease accurately and early on with a scalable solution in medical settings can help enhance medical care in terms of both timeliness and preparedness, to name a few aspects. Thus, if a machine learning algorithm can accurately and effectively predict whether an individual may harbour this disease early on, this could advance the timeline of early intervention, scale heart disease diagnosis efforts, and lead to better patient outcomes, as well as reduce the risk of future complications implicated with having heart disease.
-
-# Methods
-
-## Data
-
-For this project, we will be using the Heart Disease UCI dataset created by R. Detrano, A. Jánosi, W. Steinbrunn, M. Pfisterer, J. Schmid, S. Sandhu, K. Guppy, S. Lee, and V. Froelicher at the Department of Medicine, Veterans Administration Medical Center, Long Beach, California [@Detrano1988]. It was sourced from the UC Irvine Machine Learning Repository [@Detrano1988] and can be found [here](https://archive.ics.uci.edu/dataset/45/heart+disease). The specific file used represents the Cleveland locality. The dataset contains 303 rows, with each row representing summary statistics for a particular patient, and 14 columns with 13 features and 1 target variable. The target variable is the diagnosis of heart disease (angiographic disease status), and the value 0 is for no diagnosis of heart disease and the value 1 is for the diagnosis of heart disease. The 13 features are as follows:
-
-- Age
-- Sex
-- Chest pain type
-- Resting blood pressure
-- Serum cholesterol
-- Fasting blood sugar
-- Resting electrocardiographic
-- Maximum heart rate achieved
-- Exercise induced angina
-- Oldpeak = ST depression induced by exercise relative to rest
-- The slope of the peak exercise ST segment
-- Number of major vessels
-- Thalassemia blood disorder
-
-They are encoded in the dataset as follows:
-
-- \#3 (age)
-- \#4 (sex)
-- \#9 (cp)
-- \#10 (trestbps)
-- \#12 (chol)
-- \#16 (fbs)
-- \#19 (restecg)
-- \#32 (thalach)
-- \#38 (exang)
-- \#40 (oldpeak)
-- \#41 (slope)
-- \#44 (ca)
-- \#51 (thal)
-- \#58 (num) (the predicted attribute)
-
-## Analysis
-
-In this project, we used the Logistic Regression, SVC, Decision Tree, and Dummy Classifier as a baseline to build a classification model aimed at predicting the presence of heart disease based on clinical features. We used all available features from the dataset, excluding some variables related to the error of certain measurements. The data was split into a training set (70%) and a test set (30%). To choose the best value for the hyperparameter k, we used 5-fold cross-validation, with accuracy as the classification metric. We also standardized the data before fitting the model to ensure the features were on a similar scale. The analysis was carried out using Python, with the following libraries: NumPy, Pandas, scikit-learn, and Matplotlib.
-
-# Results & Discussion
 
 ```{python}
 # File handling
@@ -615,9 +563,6 @@ coef_df = pd.DataFrame({
 coef_df
 ```
 
-#| label: fig-logreg-coefficients
-#| fig-cap: "Feature coefficients for Logistic Regression model."
-#| out-width: 100%
 include_graphics("results/log_reg_feature_coefficients.png")
 
 
