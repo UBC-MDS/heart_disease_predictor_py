@@ -225,9 +225,9 @@ def scale_and_save_data(preprocessor, train_data, test_data, data_dir):
 
 
 @click.command()
-@click.option('--input_path', required=True, help="Path to input file")
-@click.option('--data_dir', required=True, help="Path directory to processed data")
-@click.option('--preprocessor_dir', required=True, help="Path directory to preprocessor")
+@click.option('--input-path', required=True, help="Path to input file")
+@click.option('--data-dir', required=True, help="Path directory to processed data")
+@click.option('--preprocessor-dir', required=True, help="Path directory to preprocessor")
 @click.option('--seed', type=int, default=123, help="Random Seed")
 def main(input_path, data_dir, preprocessor_dir, seed):
     """
