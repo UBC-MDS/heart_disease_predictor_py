@@ -96,7 +96,7 @@ python scripts/split_n_preprocess.py \
 --preprocessor-dir=results/models \
 --seed=522
 
-python scripts/eda.py --input_data_path data/processed/heart_disease_train.csv --output_prefix results/
+python scripts/script_eda.py --input_data_path data/processed/heart_disease_train.csv --output_prefix results/
 
 python scripts/fit_heart_disease_predictor.py \
     --train-set=data/processed/heart_disease_train.csv \
