@@ -1,258 +1,96 @@
 ---
 title: Predicting Heart Disease from Cleveland Database
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .qmd
-      format_name: quarto
-      format_version: '1.0'
-      jupytext_version: 1.16.4
-  kernelspec:
-    display_name: Python 3 (ipykernel)
-    language: python
-    name: python3
-toc: true
+jupyter: python3
+author: "Albert C. Halim, Archer Liu, Stephanie Wu, & Ziyuan Zhao"
+date: "November 29, 2024"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+  pdf:
+    toc: true
+    toc-depth: 2
 toc-title: Table of Contents
-toc-depth: 3
 number-sections: true
 bibliography: references.bib
 link-citations: true
+execute:
+  echo: false
+  warning: false
+editor: source
 ---
 
 ```{python}
-# File handling
-import os
-import requests
-import zipfile
-
-# Data handling
-import numpy as np
 import pandas as pd
-
-# Preprocessing
-from sklearn import set_config
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler
-from sklearn.impute import SimpleImputer
-from sklearn.compose import make_column_transformer
-
-# Machine Learning
-from scipy.stats import expon, lognorm, loguniform, randint, uniform, norm
-from sklearn.model_selection import  RandomizedSearchCV, cross_val_score, cross_validate
-from sklearn.pipeline import make_pipeline, Pipeline
-
-# Models
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.dummy import DummyClassifier
-
-# Scoring Metrics
-from sklearn.metrics import roc_auc_score, average_precision_score, make_scorer, f1_score, recall_score, precision_score
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-
-# Visualization
-
-import matplotlib.pyplot as plt
-
-# Data Validation
-import pandera as pa
-from pandera import Column, Check, DataFrameSchema
-from deepchecks.tabular import Dataset
-from deepchecks.tabular.checks import FeatureLabelCorrelation, FeatureFeatureCorrelation
-
-# Suppress irrelavant warnings
-import warnings
+from IPython.display import Markdown, display
+from tabulate import tabulate
 ```
 
 ```{python}
-# Create the raw data directory if it doesn't exist
-raw_dir = "../data/raw"
-if not os.path.exists(raw_dir):
-    os.makedirs(raw_dir)
+coefficient_df = pd.read_csv("../results/tables/coefficient_df.csv", index_col=0)
+best_model_cv_results_df = pd.read_csv("../results/tables/best_model_cv_results.csv", index_col=0)
+misclassified_examples_df = pd.read_csv("../results/tables/misclassified_examples.csv")
+baseline_cv_results_df = pd.read_csv("../results/tables/baseline_cv_results.csv", index_col=0)
+test_scores_df = pd.read_csv("../results/tables/test_score.csv").round(2)
 
-# Create the scripts directory if it doesn't exist
-scripts_dir = "../scripts"
-if not os.path.exists(scripts_dir):
-    os.makedirs(scripts_dir)
-
-# Download data as zip
-url = "https://archive.ics.uci.edu/static/public/45/heart+disease.zip"
-response = requests.get(url)
-
-# Save the zip file to the specified directory
-zip_path = os.path.join(raw_dir, "heart+disease.zip")
-with open(zip_path, 'wb') as f:
-    f.write(response.content)
-
-# Extract the contents of the zip file
-with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-    zip_ref.extractall(raw_dir)
+svc_test_score = float(test_scores_df.iloc[0]['Accuracy'])
+lr_test_score = float(test_scores_df.iloc[1]['Accuracy'])
 ```
 
-### Data Validation
+# Summary
 
-```{python}
-# read in data
-colnames = [
-    "age",       
-    "sex",       
-    "cp",        
-    "trestbps",  
-    "chol",      
-    "fbs",       
-    "restecg",   
-    "thalach",   
-    "exang",     
-    "oldpeak",   
-    "slope",     
-    "ca",        
-    "thal",      
-    "num"  
-]
+In this project, we developed and evaluated several classification models to predict the presence of heart disease using the Cleveland Heart Disease dataset [@Detrano1988], which includes various clinical features. We compared four models: Logistic Regression, Support Vector Classifier (SVC), Dummy Classifier (as a baseline), and Decision Tree Classifier. Logistic Regression performed the best, achieving high accuracy of `{python} lr_test_score` and providing interpretable coefficients that helped us understand the impact of each feature on heart disease prediction. The SVC also performed well but slightly lagged behind Logistic Regression in test accuracy with `{python} svc_test_score`. The Dummy Classifier served as a baseline, emphasizing the need for more sophisticated models, while the Decision Tree Classifier showed reasonable performance but tended to overfit. Misclassifications were analyzed to identify potential feature engineering opportunities, and future work could include exploring alternative classifiers such as Random Forests. Additionally, incorporating probability estimates into predictions would enhance the model's clinical usability, providing clinicians with more confidence in the results.
 
-# Load the data (without header since we specify the column names)
-file_path = os.path.join(raw_dir, "processed.cleveland.data")
-# --- Check 1: Ensure the raw file is in correct format ---
-if not file_path.endswith(".data"):
-    print("Warning: The file extension is not .data. It should be a .data file.")
-else:
-    print("File is in the expected format.")
+# Introduction
 
-heart_disease = pd.read_csv(file_path, names=colnames, header=None)
-# --- Check 1.5: Ensure the read file is in correct format ---
-if not file_path.endswith(".csv"):
-    print("Warning: The file extension is not .csv. It should be a .csv file.")
-else:
-    print("File is in the expected format.")
-# --- Check 2: Ensure correct column names ---
-expected_columns = set(colnames)
-actual_columns = set(heart_disease.columns)
+According to a 2022 CDC federal report, the leading cause of death in the United States is heart disease [@CDC2022]. At 702,880 deaths that year, the disease claimed the most lives out of popular longevity doctor Peter Attia's so-called four horsemen, and nearly as many as cancer and diabetes (two of his other horsemen) combined [@Attia2023]. Despite past efforts having led to promising declines in mortality rates, the disease has gained traction within the last 5 years in particular[@Bui2024]. As such, early detection of heart disease, not to mention increased understanding of and heightened mindfulness around mitigating the risk factors for heart disease, can help improve countless lives in the United States and elsewhere.
 
-if expected_columns != actual_columns:
-    print(f"Warning: Column names do not match. Expected: {colnames}, Found: {heart_disease.columns.tolist()}")
-else:
-    print("Column names are correct.")
+Here we ask if we can use a machine learning algorithm to predict whether an individual has the presence of heart disease given a relevant selection of their bioinformatic data. Answering this question is important because both patients and their health teams can seek to benefit from tooling and technologies that help in the diagnostic process of such a prevalent disease. Given such prevalence, not to mention the potential gravity of heart-related conditions, detecting heart disease accurately and early on with a scalable solution in medical settings can help enhance medical care in terms of both timeliness and preparedness, to name a few aspects. Thus, if a machine learning algorithm can accurately and effectively predict whether an individual may harbour this disease early on, this could advance the timeline of early intervention, scale heart disease diagnosis efforts, and lead to better patient outcomes, as well as reduce the risk of future complications implicated with having heart disease.
 
-# --- Check 3: Ensure there are no empty observations ---
-# Check for any rows with missing values (NaN)
-missing_data = heart_disease.isna().sum().sum()  # Total number of missing values
+# Methods
 
-if missing_data > 0:
-    print(f"Warning: There are {missing_data} missing values in the dataset.")
-else:
-    print("No missing values found in the dataset.")
-# Replace missing values with nan for ease of computational handling
-heart_disease.replace('?', np.nan, inplace=True)
+## Data
 
-# Update the target variable 'num' (map values greater than 1 to 1)
-heart_disease['num'] = heart_disease['num'].apply(lambda x: 1 if x > 1 else x)
-```
+For this project, we will be using the Heart Disease UCI dataset created by R. Detrano, A. Jánosi, W. Steinbrunn, M. Pfisterer, J. Schmid, S. Sandhu, K. Guppy, S. Lee, and V. Froelicher at the Department of Medicine, Veterans Administration Medical Center, Long Beach, California [@Detrano1988]. It was sourced from the UC Irvine Machine Learning Repository [@Detrano1988] and can be found [here](https://archive.ics.uci.edu/dataset/45/heart+disease). The specific file used represents the Cleveland locality. The dataset contains 303 rows, with each row representing summary statistics for a particular patient, and 14 columns with 13 features and 1 target variable. The target variable is the diagnosis of heart disease (angiographic disease status), and the value 0 is for no diagnosis of heart disease and the value 1 is for the diagnosis of heart disease. The 13 features are as follows:
 
-```{python}
-# ---- Check 4: Missingness not beyond expected threshold ----
-# Set acceptable threshold for missing data (e.g., no more than 10%)
-acceptable_threshold = 0.1
+- Age
+- Sex
+- Chest pain type
+- Resting blood pressure
+- Serum cholesterol
+- Fasting blood sugar
+- Resting electrocardiographic
+- Maximum heart rate achieved
+- Exercise induced angina
+- Oldpeak = ST depression induced by exercise relative to rest
+- The slope of the peak exercise ST segment
+- Number of major vessels
+- Thalassemia blood disorder
 
-# Calculate the proportion of missing values in each column
-missing_proportions = heart_disease.isna().mean()
+They are encoded in the dataset as follows:
 
-# Check if any column exceeds the acceptable threshold
-for column, proportion in missing_proportions.items():
-    if proportion > acceptable_threshold:
-        print(f"Warning: Missing values in column '{column}' exceed the acceptable threshold ({proportion:.2%}).")
-    else:
-        print(f"Column '{column}' has acceptable missingness ({proportion:.2%}).")
-print("------------------------")
+- \#3 (age)
+- \#4 (sex)
+- \#9 (cp)
+- \#10 (trestbps)
+- \#12 (chol)
+- \#16 (fbs)
+- \#19 (restecg)
+- \#32 (thalach)
+- \#38 (exang)
+- \#40 (oldpeak)
+- \#41 (slope)
+- \#44 (ca)
+- \#51 (thal)
+- \#58 (num) (the predicted attribute)
 
-# ---- Check 5,7,8,9: Correct data types in each column, ----
-# ---- No outlier or anomalous values, Correct category levels, Target/response variable follows expected distribution ----
-heart_disease["ca"] = heart_disease["ca"].astype('float64')
-# Define the schema
-schema = DataFrameSchema({
-    "age": pa.Column(float, pa.Check.between(0, 100)),  # Assuming ages are within a valid range
-    "sex": pa.Column(float, pa.Check.isin([0.0, 1.0])),  # 0: female, 1: male
-    "cp": pa.Column(float, pa.Check.isin([1.0, 2.0, 3.0, 4.0])),  # Chest pain types
-    "trestbps": pa.Column(float, pa.Check.between(20, 220)),  # Resting blood pressure (reasonable range)
-    "chol": pa.Column(float, pa.Check.between(50, 800)),  # Serum cholesterol (mg/dL)
-    "fbs": pa.Column(float, pa.Check.isin([0.0, 1.0])),  # Fasting blood sugar > 120 mg/dL (0: no, 1: yes)
-    "restecg": pa.Column(float, pa.Check.isin([0.0, 1.0, 2.0])),  # Resting ECG results
-    "thalach": pa.Column(float, pa.Check.between(50, 240)),  # Maximum heart rate achieved
-    "exang":  pa.Column(float, pa.Check.isin([0.0, 1.0])),  # Exercise-induced angina (0: no, 1: yes)
-    "oldpeak": pa.Column(float, pa.Check.between(0.0, 7.0)),  # ST depression induced by exercise
-    "slope": pa.Column(float, pa.Check.isin([1.0, 2.0, 3.0])),  # Slope of peak exercise ST segment
-    "ca": pa.Column(float, pa.Check.between(0, 4), nullable=True),  # Number of major vessels colored by fluoroscopy
-    "thal": pa.Column(str, pa.Check.isin(["3.0", "6.0", "7.0"]), nullable=True),  # Thalassemia types
-    "num": pa.Column(int, pa.Check.between(0, 4)),  # Diagnosis of heart disease (0: no disease to 4: severe disease)
-},
-    checks=[
-        # ---- Check 6: No duplicate observations ----
-        # Check for duplicate rows
-        pa.Check(lambda df: ~df.duplicated().any(), error="Duplicate rows found."),
-        pa.Check(lambda df: ~(df.isna().all(axis=1)).any(), error="Empty rows found.")
-    ]
-)
+## Analysis
 
-# Apply the schema to validate the dataframe
-try:
-    schema.validate(heart_disease, lazy=True)
-    print("Data validation passed successfully.")
-except pa.errors.SchemaErrors as e:
-    print(e.failure_cases)
-print("------------------------")
-```
+In this project, we used the Logistic Regression, SVC, Decision Tree, and Dummy Classifier as a baseline to build a classification model aimed at predicting the presence of heart disease based on clinical features. We used all available features from the dataset, excluding some variables related to the error of certain measurements. The data was split into a training set (70%) and a test set (30%). To choose the best value for the hyperparameter k, we used 5-fold cross-validation, with accuracy as the classification metric. We also standardized the data before fitting the model to ensure the features were on a similar scale. The analysis was carried out using Python, with the following libraries: NumPy, Pandas, scikit-learn, and Matplotlib.
 
-```{python}
-# Suppress the FutureWarning related to is_categorical_dtype
-warnings.filterwarnings('ignore', category=FutureWarning, message=".*is_categorical_dtype.*")
+# Results & Discussion
 
-# ---- Check 10: No anomalous correlations between target and explanatory variables ----
-categorical_features = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal']
-heart_disease_ds = Dataset(heart_disease, label='num', cat_features=categorical_features)
-
-check_feat_lab_corr = FeatureLabelCorrelation().add_condition_feature_pps_less_than(0.9)
-check_feat_lab_corr_result = check_feat_lab_corr.run(dataset=heart_disease_ds)
-check_feat_lab_corr.run(dataset=heart_disease_ds).show()
-if not check_feat_lab_corr_result.passed_conditions():
-    raise ValueError("Feature-Target correlation exceeds the maximum acceptable threshold.")
-
-# ---- Check 11: No anomalous correlations between explanatory variables ----
-check_feat_feat_corr = FeatureFeatureCorrelation(threshold=0.9)
-check_feat_feat_corr_result = check_feat_feat_corr.run(dataset=heart_disease_ds)
-check_feat_feat_corr.run(dataset=heart_disease_ds).show()
-
-if not check_feat_feat_corr_result.passed_conditions():
-    raise ValueError("Feature-Feature correlation exceeds the maximum acceptable threshold.")
-```
-
-```{python}
-# Scale and split into train & test
-np.random.seed(522)
-set_config(transform_output="pandas")
-
-# Create the split
-heart_disease_train, heart_disease_test = train_test_split(
-    heart_disease, train_size=0.70, stratify=heart_disease["num"]
-)
-# Create the directory if it doesn't exist
-processed_dir = "../data/processed"
-if not os.path.exists(processed_dir):
-    os.makedirs(processed_dir)
-heart_disease_train.to_csv("../data/processed/heart_disease_train.csv")
-heart_disease_test.to_csv("../data/processed/heart_disease_test.csv")
-```
-
-```{python}
-results_dir = "../results"
-if not os.path.exists(results_dir):
-    os.makedirs(results_dir)
-
-# Load the raw data
-file_path = "../data/processed/heart_disease_train.csv"  # Adjusted name
-raw_data = pd.read_csv(file_path)
-print(raw_data.head())
-```
-
+```{=html}
 <div style="background-color:#cce7ff; padding:15px; border-radius:5px; border: 2px solid #007acc;">
     <h2 style="color:#007acc;">📊 Visualization Section</h2>
     <p style="font-size:14px; color:#005f99;">
@@ -260,6 +98,7 @@ print(raw_data.head())
         and model performance (confusion matrix). Each visualization highlights critical aspects of the analysis.
     </p>
 </div>
+```
 
 ### Data Set Summary
 
@@ -279,37 +118,26 @@ These features include various physiological parameters, such as:
 
 Additionally, it records potential signs of heart disease, such as chest pain type (`cp`) and exercise-induced angina (`exang`).
 
-The dataset contains **303 observations**, and the original study used a Bayesian model to estimate the probability of having heart disease (Robert et al., 1989).
+The dataset contains **303 observations**, and the original study used a Bayesian model to estimate the probability of having heart disease [@Detrano1988].
 
 As shown in Figure @fig-numeric-distributions, the numeric features of the dataset have varying distributions, which provide an overview of the data's spread and tendencies.
 
-#| label: fig-numeric-distributions
-#| fig-cap: "Distribution of numeric features in the dataset."
-#| out-width: 100%
-include_graphics("results/raw_feature_distributions.png")
+![Distribution of numeric features in the dataset.](../results/figures/raw_feature_distributions.png){#fig-numeric-distributions width=100%}  
 
 The target variable (`num`) is distributed as displayed in Figure @fig-target-distribution, where the majority of the samples are classified into the lower categories of heart disease.
 
-#| label: fig-target-distribution
-#| fig-cap: "Distribution of the target variable (`num`)."
-#| out-width: 100%
-include_graphics("results/target_variable_distribution.png")
+![Distribution of the target variable (`num`).](../results/figures/target_variable_distribution.png){#fig-target-distribution width=90%}  
 
 For categorical features, the grouped distributions based on the presence of heart disease are shown in Figure @fig-categorical-distributions. These stacked bar plots illustrate the relationship between categorical variables and the target variable.
 
-#| label: fig-categorical-distributions
-#| fig-cap: "Distribution of categorical features grouped by heart disease (`num`)."
-#| out-width: 100%
-include_graphics("results/categorical_features_distribution.png")
+![Distribution of categorical features grouped by heart disease (`num`).](../results/figures/categorical_features_distribution.png){#fig-categorical-distributions width=100%}  
 
 Boxplots for selected numeric features grouped by the target variable (num) are presented in Figure @fig-boxplots-class, offering insights into the spread and central tendencies of the selected features for each heart disease category.
 
-#| label: fig-boxplots-class
-#| fig-cap: "Boxplots of selected numeric features grouped by heart disease (`num`)."
-#| out-width: 100%
-include_graphics("results/raw_boxplots_by_class.png")
+![Boxplots of selected numeric features grouped by heart disease (`num`).](../results/figures/raw_boxplots_by_class.png){#fig-boxplots-class width=90%}  
 
 
+```{=html}
 <div style="background-color:#fce8e6; padding:15px; border-radius:5px; border: 2px solid #ff6666;">
     <h2 style="color:#ff6666;">✅ Visualization Section Completed</h2>
     <p style="font-size:14px; color:#cc0000;">
@@ -317,281 +145,96 @@ include_graphics("results/raw_boxplots_by_class.png")
         and modeling steps. If additional visualizations are required, they can be added here.
     </p>
 </div>
-
-## Preprocessing, Modelling & Tuning
-
-```{python}
-# Create a pipeline to handle 'ca'
-ca_pipeline = make_pipeline(
-    SimpleImputer(strategy="most_frequent"),
-    StandardScaler()
-)
-
-# Create a pipeline to handle 'thal'
-thal_pipeline = make_pipeline(
-    SimpleImputer(strategy="most_frequent"),
-    OneHotEncoder(sparse_output=False)
-)
-
-# Set up preprocessor
-heart_disease_preprocessor = make_column_transformer(
-    (ca_pipeline, ['ca']),  # Apply imputation and scaling to 'ca'
-    (thal_pipeline, ['thal']),  # Apply imputation and encoding to 'thal'
-    (OneHotEncoder(sparse_output=False), ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope']),
-    (StandardScaler(), ["age", "trestbps", "chol", "thalach", "oldpeak"]),
-    remainder='passthrough',
-    verbose_feature_names_out=True
-)
-
-# Fit, transform, and save scaled data for reference only
-heart_disease_preprocessor.fit(heart_disease_train)
-scaled_heart_disease_train = heart_disease_preprocessor.transform(heart_disease_train)
-scaled_heart_disease_test = heart_disease_preprocessor.transform(heart_disease_test)
-
-scaled_heart_disease_train.to_csv("../data/processed/scaled_heart_disease_train.csv")
-scaled_heart_disease_test.to_csv("../data/processed/scaled_heart_disease_test.csv")
-```
-
-```{python}
-X_train = heart_disease_train.drop(columns=['num'])
-y_train = heart_disease_train['num']
-X_test = heart_disease_test.drop(columns=['num'])
-y_test = heart_disease_test['num']
-```
-
-```{python}
-def randomized_search(X_train, y_train, model, param_dist, n_iter=100, cv=5, random_state=123):
-    """
-    Performs RandomizedSearchCV on the specified model and returns the best model.
-    
-    Parameters:
-    X_train : DataFrame
-        Training features
-    y_train : Series
-        Training labels
-    model : estimator
-        The model to be tuned
-    param_dist : dict
-        Hyperparameter distribution for RandomizedSearchCV
-    n_iter : int, optional, default=100
-        Number of iterations for RandomizedSearchCV
-    cv : int, optional, default=5
-        Number of cross-validation folds
-    random_state : int, optional, default=123
-        Random seed for reproducibility
-
-    Returns:
-    best_model : estimator
-        The best model after RandomizedSearchCV
-    """
-    # Perform RandomizedSearchCV
-    random_search = RandomizedSearchCV(model, param_distributions=param_dist,
-                                       n_iter=n_iter, cv=cv, n_jobs=-1, random_state=random_state,
-                                       return_train_score=True)
-    
-    # Fit the model
-    random_search.fit(X_train, y_train)
-
-    # Return the best model found by RandomizedSearchCV
-    return random_search.best_estimator_
-```
-
-```{python}
-# This function is taken from UBC DSCI 571 Course
-def mean_std_cross_val_scores(model, X_train, y_train, **kwargs):
-    """
-    Returns mean and std of cross validation
-
-    Parameters
-    ----------
-    model :
-        scikit-learn model
-    X_train : numpy array or pandas DataFrame
-        X in the training data
-    y_train :
-        y in the training data
-
-    Returns
-    ----------
-        pandas Series with mean scores from cross_validation
-    """
-
-    scores = cross_validate(model, X_train, y_train, **kwargs)
-
-    mean_scores = pd.DataFrame(scores).mean()
-    std_scores = pd.DataFrame(scores).std()
-    out_col = []
-
-    for i in range(len(mean_scores)):
-        out_col.append((f"%0.3f (+/- %0.3f)" % (mean_scores.iloc[i], std_scores.iloc[i])))
-
-    return pd.Series(data=out_col, index=mean_scores.index)
-```
-
-```{python}
-results_dict = {}
-
-models = {
-    "Dummy": DummyClassifier(random_state=123),
-    "Decision tree": DecisionTreeClassifier(random_state=123),
-    "SVC": SVC(random_state=123),
-    "Logistic Regression": LogisticRegression(random_state=123, max_iter=1000)
-}
-
-for model in models.items():
-    pipe = make_pipeline(heart_disease_preprocessor, model[1])
-    results_dict[model[0]] = mean_std_cross_val_scores(
-        pipe, X_train, y_train, cv=5, return_train_score=True
-    )
-
-# Show the cross-validation results of baseline models
-income_pred_results_df = pd.DataFrame(results_dict).T
-income_pred_results_df
-```
-
-```{python}
-# Parameter grid for tuning Decision Tree model
-tree_param = {
-    'dt__max_depth': [i for i in range(1, 101)],
-    'dt__class_weight': [None, "balanced"]
-}
-
-# Set up a pipeline to include the preprocessor here, or it won't work when scoring on the test set
-tree_pipe = Pipeline(steps=[
-    ('preprocessor', heart_disease_preprocessor),
-    ('dt', DecisionTreeClassifier(random_state=123))
-])
-
-best_tree_model = randomized_search(X_train, y_train, tree_pipe, tree_param)
-
-# Calculate the train score (accuracy on training data)
-train_score = best_tree_model.score(X_train, y_train)
-print("Decision Tree Classifier Best Model Train Accuracy Score: ", train_score)
-```
-
-```{python}
-# Parameter grid for tuning SVC model
-svc_param = {
-    "svc__gamma": loguniform(1e-4, 1e3),
-    "svc__C": loguniform(1e-4, 1e3),
-    "svc__class_weight": [None, "balanced"]
-}
-
-# Set up a pipeline to include the preprocessor here, or it won't work when scoring on the test set
-svc_pipe = Pipeline(steps=[
-    ('preprocessor', heart_disease_preprocessor),
-    ('svc', SVC(random_state=123))
-])
-
-best_svc_model = randomized_search(X_train, y_train, svc_pipe, svc_param)
-
-# Calculate the train score (accuracy on training data)
-train_score = best_svc_model.score(X_train, y_train)
-print("SVC Best Model Train Accuracy Score: ", train_score)
-```
-
-```{python}
-# Parameter grid for tuning Logistic Regression model
-lr_param = {
-    "lr__C": loguniform(1e-4, 1e3),
-    'lr__class_weight': [None, 'balanced']
-}
-
-# Set up a pipeline to include the preprocessor here, or it won't work when scoring on the test set
-lr_pipe = Pipeline(steps=[
-    ('preprocessor', heart_disease_preprocessor),
-    ('lr', LogisticRegression(random_state=123, max_iter=1000))
-])
-
-best_lr_model = randomized_search(X_train, y_train, lr_pipe, lr_param)
-
-# Calculate the train score (accuracy on training data)
-train_score = best_lr_model.score(X_train, y_train)
-print("Logistic Regression Best Model Train Accuracy Score: ", train_score)
-```
-
-```{python}
-results_dict = {}
-best_model_pipes = {
-    "Best Decision tree": best_tree_model,
-    "Best SVC": best_svc_model,
-    "Best Logistic Regression": best_lr_model
-}
-
-# Preprocessor included in pipelines
-for model in best_model_pipes.items():
-    pipe = model[1]
-    results_dict[model[0]] = mean_std_cross_val_scores(
-        pipe, X_train, y_train, cv=5, return_train_score=True
-    )
-
-# Cross-validation results for each best-model pipelines
-best_model_cv_results_df = pd.DataFrame(results_dict).T
-best_model_cv_results_df
-```
-
-```{python}
-# Calculate the test score (accuracy on testing data)
-
-svc_test_score = best_svc_model.score(X_test, y_test)
-print("SVC Best Model Test Accuracy Score: ", svc_test_score)
-lr_test_score = best_lr_model.score(X_test, y_test)
-print("Logistic Regression Best Model Test Accuracy Score: ", lr_test_score)
 ```
 
 ## Discussion
 
-In the final cross-validation results, both the best SVC and best Logistic Regression achieve excellent test scores. The small gap between their training and test scores suggests that both models generalize well, with minimal overfitting. However, Logistic Regression has a smaller gap between training and test scores (0.023) compared to SVC (0.026), suggesting that it might generalize slightly better than SVC.
-
-This is further confirmed by the test scores, which show that Logistic Regression slightly outperforms SVC on unseen data.
-
-To better understand the relationship between each feature and heart disease presence, we examine the coefficients obtained from the logistic regression model. Each coefficient indicates how the corresponding feature influences the likelihood of heart disease. Positive coefficients suggest that as the feature increases, the likelihood of having heart disease increases as well, while negative coefficients suggest the opposite.
-
 ```{python}
-# Get coefficients for best logistic regression model
-log_reg_coef = best_lr_model.named_steps['lr'].coef_[0]
+#| label: tbl-baseline_cv_results_df
+#| tbl-cap: Baseline Model CV Results
 
-# Get feature names
-feature_names = best_lr_model.named_steps['preprocessor'].get_feature_names_out()
-
-# Create and sort DataFrame by feature coefficients
-coef_df = pd.DataFrame({
-    'Feature': feature_names,
-    'Coefficient': log_reg_coef
-}).sort_values(by='Coefficient', ascending=False)
-
-coef_df
+Markdown(baseline_cv_results_df.to_markdown())
 ```
 
-include_graphics("results/log_reg_feature_coefficients.png")
+```{python}
+#| label: tbl-best_model_cv_results_df
+#| tbl-cap: Best Model CV Results
 
+Markdown(best_model_cv_results_df.to_markdown())
+```
+
+```{python}
+# Remove the ' (+/- ...)' part and convert to float
+best_model_cv_results_df['test_score'] = best_model_cv_results_df['test_score'].str.extract(r'([0-9.]+)').astype(float)
+best_model_cv_results_df['train_score'] = best_model_cv_results_df['train_score'].str.extract(r'([0-9.]+)').astype(float)
+
+# Extracting values for Logistic Regression and SVC from index 0
+logreg_test_score = best_model_cv_results_df.iloc[2]['test_score']
+logreg_train_score = best_model_cv_results_df.iloc[2]['train_score']
+svc_test_score = best_model_cv_results_df.iloc[1]['test_score']
+svc_train_score = best_model_cv_results_df.iloc[1]['train_score']
+
+# Calculating the gaps
+logreg_gap = float(round(logreg_train_score - logreg_test_score, 3))
+svc_gap = float(round(svc_train_score - svc_test_score, 3))
+```
+
+After doing checking on the baseline (@tbl-baseline_cv_results_df) we proceed to do the cross-validation. In the final cross-validation results (@tbl-best_model_cv_results_df), both the best SVC and best Logistic Regression achieve excellent test scores. The small gap between their training and test scores suggests that both models generalize well, with minimal overfitting. However, Logistic Regression has a smaller gap between training and test scores (`{python} logreg_gap`) compared to SVC (`{python} svc_gap`), suggesting that it might generalize slightly better than SVC.
+
+
+```{python}
+#| label: tbl-test_scores_df
+#| tbl-cap: Test Score Results
+
+Markdown(test_scores_df.to_markdown())
+```
+
+This is further confirmed by the test scores @tbl-test_scores_df, which show that Logistic Regression slightly outperforms SVC on unseen data.
+
+```{python}
+#| label: tbl-coefficient_df
+#| tbl-cap: Detailed Coefficients for Logistic Regression
+
+Markdown(coefficient_df.to_markdown())
+```
+
+To better understand the relationship between each feature and heart disease presence, we examine the coefficients obtained from the logistic regression model (@tbl-coefficient_df). Each coefficient indicates how the corresponding feature influences the likelihood of heart disease. Positive coefficients suggest that as the feature increases, the likelihood of having heart disease increases as well, while negative coefficients suggest the opposite.
+
+![Coefficient Table for Logistic Regression](../results/figures/log_reg_feature_coefficients.png){#fig-logreg-coefficients width=85%}  
 
 In Figure @fig-logreg-coefficients, we can see that features like `ca`, `oldpeak`, and `trestbps` have relatively high positive coefficients, meaning they strongly influence the prediction of heart disease. This makes sense, as research shows that high blood pressure is one of the most important causes of heart disease [@Fuchs2020]. For oldpeak specifically, research shows that ST depression during exercise is linked to higher risk of heart disease[@Carlen2019]. In contrast, features like `thalach` have large negative coefficients, suggesting they are linked to a lower likelihood of heart disease. Features like `age` and `chol`, however, show little impact, as their coefficients are close to zero.
 
-Interestingly, females (`sex` = 0) are more likely to be free of heart disease, as indicated by the large negative coefficient for `onehotencoder__sex_0.0`. In contrast, males (`sex` = 1) are more likely to have heart disease, as reflected by the high positive coefficient for `onehotencoder__sex_1.0`. This is supported by Regitz-Zagrosek and Gebhard's research(2023)[@Regitz-Zagrosek2023], which highlights how biological sex differences, such as premenopausal women having a relative protection from coronary artery disease.
+Interestingly, females (`sex` = 0) are more likely to be free of heart disease, as indicated by the large negative coefficient for `onehotencoder__sex_0.0`. In contrast, males (`sex` = 1) are more likely to have heart disease, as reflected by the high positive coefficient for `onehotencoder__sex_1.0`. This is supported by @Regitz-Zagrosek2023, which highlights how biological sex differences, such as premenopausal women having a relative protection from coronary artery disease.
 
 However, there are some limitations of this study. First of all, as categorical features were split into multiple binary columns, interpreting the coefficients for these encoded variables can be tricky. It can be difficult to directly correlate the coefficients with the original feature, and whether this approach is reasonable should also be questioned.
 
 Additionally, while the model's coefficients offer useful insights, they should be taken with caution. Further exploration into feature relationships and more advanced modeling techniques might be required to better understand the complexities of predicting heart disease.
 
 ```{python}
-lr_predictions = best_lr_model.predict(X_test)
+#| label: tbl-misclassified_examples_df
+#| tbl-cap: Misclassified Examples
 
-# Identify misclassified indices
-misclassified_indices = np.where(y_test != lr_predictions)[0]
-
-# Display a sample of misclassified examples
-print("Misclassified Examples (Logistic Regression):")
-print(X_test.iloc[misclassified_indices].head())  # Display the first few misclassified feature rows
-print("True Labels:", y_test.iloc[misclassified_indices].head().values)  # True labels for misclassified examples
-print("Predicted Labels:", lr_predictions[misclassified_indices][:5])  # Predicted labels for these examples
+Markdown(misclassified_examples_df[:5].to_markdown())
 ```
 
-False Positives (e.g., index 218): Predicted as `1` (positive for heart disease), but true label is `0`.  
-This individual has a high cholesterol level (`chol` = 303), moderate `oldpeak` (2.0), and significant `ca` = 2.0, which might make the model lean toward predicting heart disease incorrectly.
+```{python}
+# Extract the necessary values from the dataframe
+false_positive_0_predicted = float(misclassified_examples_df.iloc[0]['Predicted Label'])
+false_positive_0_true = float(misclassified_examples_df.iloc[0]['True Label'])
+false_positive_0_chol = float(misclassified_examples_df.iloc[0]['chol'])
+false_positive_0_oldpeak = float(misclassified_examples_df.iloc[0]['oldpeak'])
+false_positive_0_ca = float(misclassified_examples_df.iloc[0]['ca'])
 
-False Negatives (e.g., indices 16, 199, 246, 32): Predicted as `0` (no heart disease), but true label is `1`.  
-Many of these cases involve features like high `thalach` (e.g., 168, 158) and `slope` = 3.0 or 1.0, which the model might not weigh heavily enough.
+false_negative_1_thalach = float(misclassified_examples_df.iloc[1]['thalach'])
+false_negative_2_thalach = float(misclassified_examples_df.iloc[4]['thalach'])
+false_negative_1_slope = float(misclassified_examples_df.iloc[1]['slope'])
+false_negative_2_slope = float(misclassified_examples_df.iloc[2]['slope'])
+```
+From @tbl-misclassified_examples_df, we can see that false Positives (e.g., index 0): Predicted as `{python} false_positive_0_predicted` (positive for heart disease), but true label is `{python} false_positive_0_true`.
+This individual has a high cholesterol level (`chol` = `{python} false_positive_0_chol`), moderate `oldpeak` (`oldpeak` = `{python} false_positive_0_oldpeak`), and significant `ca` = `{python} false_positive_0_ca`, which might make the model lean toward predicting heart disease incorrectly.
+
+False Negatives (e.g., indices 1, 2, 3, 4): Predicted as `0` (no heart disease), but true label is `1`.
+Many of these cases involve features like high `thalach` (e.g., `{python} false_negative_1_thalach`, `{python} false_negative_2_thalach`) and `slope` = `{python} false_negative_1_slope` or `{python} false_negative_2_slope`, which the model might not weigh heavily enough.
 
 Overall the Logistic Regression model performs well and could be useful as a first-pass screening tool in a clinical setting, but there are ways we can make it even better. First, we can take a closer look at the misclassified examples and compare them to correctly classified ones. This could help us identify features or patterns the model struggles with and guide us in improving the features or adding new ones that capture important relationships.
 
