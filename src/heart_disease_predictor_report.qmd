@@ -2,9 +2,15 @@
 title: Predicting Heart Disease from Cleveland Database
 jupyter:
   kernelspec:
-    display_name: 'Python [conda env:hrt]'
+    display_name: 'Python [conda env:heart_disease_predictor]'
     language: python
-    name: conda-env-hrt-py
+    name: conda-env-heart_disease_predictor-py
+toc: true
+toc-title: "Table of Contents"
+toc-depth: 3
+number-sections: true
+bibliography: references.bib
+link-citations: true
 ---
 
 
@@ -18,7 +24,7 @@ In this project, we developed and evaluated several classification models to pre
 
 # Introduction
 
-According to a 2022 CDC federal report, the leading cause of death in the United States is heart disease (Centers for Disease Control and Prevention [CDC], 2022). At 702,880 deaths that year, the disease claimed the most lives out of popular longevity doctor Peter Attia's so-called four horsemen, and nearly as many as cancer and diabetes (two of his other horsemen) combined (Attia, 2023). Despite past efforts having led to promising declines in mortality rates, the disease has gained traction within the last 5 years in particular (Bui, 2024). As such, early detection of heart disease, not to mention increased understanding of and heightened mindfulness around mitigating the risk factors for heart disease, can help improve countless lives in the United States and elsewhere.
+According to a 2022 CDC federal report, the leading cause of death in the United States is heart disease [@CDC2022]. At 702,880 deaths that year, the disease claimed the most lives out of popular longevity doctor Peter Attia's so-called four horsemen, and nearly as many as cancer and diabetes (two of his other horsemen) combined [@Attia2023]. Despite past efforts having led to promising declines in mortality rates, the disease has gained traction within the last 5 years in particular [@Bui2024]. As such, early detection of heart disease, not to mention increased understanding of and heightened mindfulness around mitigating the risk factors for heart disease, can help improve countless lives in the United States and elsewhere.
 
 Here we ask if we can use a machine learning algorithm to predict whether an individual has the presence of heart disease given a relevant selection of their bioinformatic data. Answering this question is important because both patients and their health teams can seek to benefit from tooling and technologies that help in the diagnostic process of such a prevalent disease. Given such prevalence, not to mention the potential gravity of heart-related conditions, detecting heart disease accurately and early on with a scalable solution in medical settings can help enhance medical care in terms of both timeliness and preparedness, to name a few aspects. Thus, if a machine learning algorithm can accurately and effectively predict whether an individual may harbour this disease early on, this could advance the timeline of early intervention, scale heart disease diagnosis efforts, and lead to better patient outcomes, as well as reduce the risk of future complications implicated with having heart disease.
 
@@ -26,7 +32,7 @@ Here we ask if we can use a machine learning algorithm to predict whether an ind
 
 ## Data
 
-For this project, we will be using the Heart Disease UCI dataset created by R. Detrano, A. Jánosi, W. Steinbrunn, M. Pfisterer, J. Schmid, S. Sandhu, K. Guppy, S. Lee, and V. Froelicher at the Department of Medicine, Veterans Administration Medical Center, Long Beach, California (Detrano et al., 1988). It was sourced from the UC Irvine Machine Learning Repository (Detrano et al., 1988) and can be found [here](https://archive.ics.uci.edu/dataset/45/heart+disease). The specific file used represents the Cleveland locality. The dataset contains 303 rows, with each row representing summary statistics for a particular patient, and 14 columns with 13 features and 1 target variable. The target variable is the diagnosis of heart disease (angiographic disease status), and the value 0 is for no diagnosis of heart disease and the value 1 is for the diagnosis of heart disease. The 13 features are as follows:
+For this project, we will be using the Heart Disease UCI dataset created by R. Detrano, A. Jánosi, W. Steinbrunn, M. Pfisterer, J. Schmid, S. Sandhu, K. Guppy, S. Lee, and V. Froelicher at the Department of Medicine, Veterans Administration Medical Center, Long Beach, California [@Detrano1988]. It was sourced from the UC Irvine Machine Learning Repository [@Detrano1988] and can be found [here](https://archive.ics.uci.edu/dataset/45/heart+disease). The specific file used represents the Cleveland locality. The dataset contains 303 rows, with each row representing summary statistics for a particular patient, and 14 columns with 13 features and 1 target variable. The target variable is the diagnosis of heart disease (angiographic disease status), and the value 0 is for no diagnosis of heart disease and the value 1 is for the diagnosis of heart disease. The 13 features are as follows:
 
 - Age
 - Sex
@@ -98,6 +104,7 @@ from sklearn.metrics import roc_auc_score, average_precision_score, make_scorer,
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 # Visualization
+
 import matplotlib.pyplot as plt
 
 # Data Validation
@@ -326,79 +333,34 @@ Additionally, it records potential signs of heart disease, such as chest pain ty
 
 The dataset contains **303 observations**, and the original study used a Bayesian model to estimate the probability of having heart disease (Robert et al., 1989).
 
-```{python}
-# General feature analysis for numeric features
-numeric_features = raw_data.select_dtypes(include=["float64", "int64"]).columns
+As shown in Figure @fig-numeric-distributions, the numeric features of the dataset have varying distributions, which provide an overview of the data's spread and tendencies.
 
-plt.figure(figsize=(16, 12))
-for i, feature in enumerate(numeric_features, 1):
-    plt.subplot(4, 4, i)  # Adjust rows/columns as needed
-    plt.hist(raw_data[feature], bins=15, color="lightblue", edgecolor="black")
-    plt.title(f"Distribution of {feature}", fontsize=10)
-    plt.xlabel(feature, fontsize=8)
-    plt.ylabel("Count", fontsize=8)
-plt.tight_layout()
-plt.savefig(f"{results_dir}/raw_feature_distributions.png", dpi=300)
-plt.show()
-```
+#| label: fig-numeric-distributions
+#| fig-cap: "Distribution of numeric features in the dataset."
+#| out-width: 100%
+include_graphics("results/raw_feature_distributions.png")
 
-```{python}
-# Count the occurrences of each class in "num"
-target_counts = raw_data["num"].value_counts()
+The target variable (`num`) is distributed as displayed in Figure @fig-target-distribution, where the majority of the samples are classified into the lower categories of heart disease.
 
-# Plot the target variable distribution
-plt.figure(figsize=(8, 5))
-plt.bar(target_counts.index, target_counts.values, color="skyblue", edgecolor="black")
-plt.title("Distribution of Target Variable (num)", fontsize=14)
-plt.xlabel("Class (num)", fontsize=12)
-plt.ylabel("Count", fontsize=12)
-plt.xticks(target_counts.index, fontsize=10)
-plt.tight_layout()
+#| label: fig-target-distribution
+#| fig-cap: "Distribution of the target variable (`num`)."
+#| out-width: 100%
+include_graphics("results/target_variable_distribution.png")
 
-# Save the plot
-plt.savefig(f"{results_dir}/target_variable_distribution.png", dpi=300)
-plt.show()
-```
+For categorical features, the grouped distributions based on the presence of heart disease are shown in Figure @fig-categorical-distributions. These stacked bar plots illustrate the relationship between categorical variables and the target variable.
 
-```{python}
-# List of categorical features to visualize
-categorical_features = ["sex", "cp", "fbs", "restecg", "exang", "slope", "thal"]
+#| label: fig-categorical-distributions
+#| fig-cap: "Distribution of categorical features grouped by heart disease (`num`)."
+#| out-width: 100%
+include_graphics("results/categorical_features_distribution.png")
 
-# Create subplots for all categorical variables
-plt.figure(figsize=(16, 12))
-for i, feature in enumerate(categorical_features, 1):
-    plt.subplot(3, 3, i)  # Adjust rows/columns based on the number of features
-    counts = raw_data.groupby([feature, 'num']).size().unstack()
-    counts.plot(kind='bar', stacked=True, ax=plt.gca(), color=["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"])
-    plt.title(f"Distribution of '{feature}' by Heart Disease (num)", fontsize=10)
-    plt.xlabel(feature, fontsize=8)
-    plt.ylabel("Count", fontsize=8)
-    plt.legend(title="Heart Disease (num)", loc='upper right', fontsize=6)
-    plt.tight_layout()
+Boxplots for selected numeric features grouped by the target variable (num) are presented in Figure @fig-boxplots-class, offering insights into the spread and central tendencies of the selected features for each heart disease category.
 
-# Save the combined plot
-plt.savefig(f"{results_dir}/categorical_features_distribution.png", dpi=300)
-plt.show()
-```
+#| label: fig-boxplots-class
+#| fig-cap: "Boxplots of selected numeric features grouped by heart disease (`num`)."
+#| out-width: 100%
+include_graphics("results/raw_boxplots_by_class.png")
 
-```{python}
-# List of numeric features for boxplots
-selected_features = ["age", "thalach", "chol", "oldpeak"]
-
-plt.figure(figsize=(14, 8))
-for i, feature in enumerate(selected_features, 1):
-    plt.subplot(2, 2, i)
-    # Boxplot for each feature grouped by 'num'
-    data = [raw_data[raw_data["num"] == cls][feature] for cls in raw_data["num"].unique()]
-    plt.boxplot(data, labels=[str(cls) for cls in raw_data["num"].unique()])
-    plt.title(f"{feature} by Class (num)", fontsize=12)
-    plt.xlabel("Class (num)", fontsize=10)
-    plt.ylabel(feature, fontsize=10)
-    plt.xticks(rotation=330, fontsize=9)
-plt.tight_layout()
-plt.savefig(f"{results_dir}/raw_boxplots_by_class.png", dpi=300)
-plt.show()
-```
 
 <div style="background-color:#fce8e6; padding:15px; border-radius:5px; border: 2px solid #ff6666;">
     <h2 style="color:#ff6666;">✅ Visualization Section Completed</h2>
@@ -653,23 +615,15 @@ coef_df = pd.DataFrame({
 coef_df
 ```
 
-```{python}
-# Plot the coefficients bar chart
-plt.figure(figsize=(12, 8))
-plt.barh(coef_df['Feature'], coef_df['Coefficient'], color=coef_df['Coefficient'].apply(lambda x: 'orange' if x > 0 else 'steelblue'))
+#| label: fig-logreg-coefficients
+#| fig-cap: "Feature coefficients for Logistic Regression model."
+#| out-width: 100%
+include_graphics("results/log_reg_feature_coefficients.png")
 
-plt.xlabel('Coefficient Value')
-plt.ylabel('Feature')
-plt.title('Feature Coefficients for Logistic Regression')
 
-plt.tight_layout()
-plt.savefig(f"{results_dir}/log_reg_feature_coefficients.png", dpi=300)
-plt.show()
-```
+In Figure @fig-logreg-coefficients, we can see that features like `ca`, `oldpeak`, and `trestbps` have relatively high positive coefficients, meaning they strongly influence the prediction of heart disease. This makes sense, as research shows that high blood pressure is one of the most important causes of heart disease [@Fuchs2020]. For oldpeak specifically, research shows that ST depression during exercise is linked to higher risk of heart disease[@Carlen2019]. In contrast, features like `thalach` have large negative coefficients, suggesting they are linked to a lower likelihood of heart disease. Features like `age` and `chol`, however, show little impact, as their coefficients are close to zero.
 
-From the chart above, we can see that features like `ca`, `oldpeak`, and `trestbps` have relatively high positive coefficients, meaning they strongly influence the prediction of heart disease. This makes sense, as research shows that high blood pressure is one of the most important causes of heart disease(Fuchs & Whelton, 2020). For oldpeak specifically, research shows that ST depression during exercise is linked to higher risk of heart disease(Carlén et al., 2019). In contrast, features like `thalach` have large negative coefficients, suggesting they are linked to a lower likelihood of heart disease. Features like `age` and `chol`, however, show little impact, as their coefficients are close to zero.
-
-Interestingly, females (`sex` = 0) are more likely to be free of heart disease, as indicated by the large negative coefficient for `onehotencoder__sex_0.0`. In contrast, males (`sex` = 1) are more likely to have heart disease, as reflected by the high positive coefficient for `onehotencoder__sex_1.0`. This is supported by Regitz-Zagrosek and Gebhard's reseach(2023), which highlights how biological sex differences, such as premenopausal women having a relative protection from coronary artery disease.
+Interestingly, females (`sex` = 0) are more likely to be free of heart disease, as indicated by the large negative coefficient for `onehotencoder__sex_0.0`. In contrast, males (`sex` = 1) are more likely to have heart disease, as reflected by the high positive coefficient for `onehotencoder__sex_1.0`. This is supported by Regitz-Zagrosek and Gebhard's research(2023)[@Regitz-Zagrosek2023], which highlights how biological sex differences, such as premenopausal women having a relative protection from coronary artery disease.
 
 However, there are some limitations of this study. First of all, as categorical features were split into multiple binary columns, interpreting the coefficients for these encoded variables can be tricky. It can be difficult to directly correlate the coefficients with the original feature, and whether this approach is reasonable should also be questioned.
 
@@ -694,7 +648,7 @@ This individual has a high cholesterol level (`chol` = 303), moderate `oldpeak` 
 False Negatives (e.g., indices 16, 199, 246, 32): Predicted as `0` (no heart disease), but true label is `1`.  
 Many of these cases involve features like high `thalach` (e.g., 168, 158) and `slope` = 3.0 or 1.0, which the model might not weigh heavily enough.
 
-Overall the Loogistic Regression model performs well and could be useful as a first-pass screening tool in a clinical setting, but there are ways we can make it even better. First, we can take a closer look at the misclassified examples and compare them to correctly classified ones. This could help us identify features or patterns the model struggles with and guide us in improving the features or adding new ones that capture important relationships.
+Overall the Logistic Regression model performs well and could be useful as a first-pass screening tool in a clinical setting, but there are ways we can make it even better. First, we can take a closer look at the misclassified examples and compare them to correctly classified ones. This could help us identify features or patterns the model struggles with and guide us in improving the features or adding new ones that capture important relationships.
 
 Next, we could test other classifiers to see if they perform better. For example, Random Forests are good at handling feature interactions automatically, which could help improve accuracy.
 
@@ -703,22 +657,3 @@ Finally, instead of just giving a prediction, the model could provide a probabil
 These changes could make the model even more accurate and useful in practice.
 
 # References
-
-Dua, D., Dheeru, D., & Graff, C. (2017). *UCI Machine Learning Repository*. University of California, Irvine. https://archive.ics.uci.edu/ml
-
-Cleveland Clinic Foundation. (1988). Heart disease data set. In *Proceedings of Machine Learning and Medical Applications*.
-
-Attia, P. (2023, February 15). Peter on the four horsemen of chronic disease. PeterAttiaMD.com. https://peterattiamd.com/peter-on-the-four-horsemen-of-chronic-disease/
-
-Bui, T. (2024, October 15). Cardiovascular disease is rising again after years of improvement. Stat News. https://www.statnews.com/2024/10/15/cardiovascular-disease-rising-experts-on-causes/
-
-Centers for Disease Control and Prevention (CDC). (2022). Leading causes of death. National Center for Health Statistics. https://www.cdc.gov/nchs/fastats/leading-causes-of-death.htm
-
-Detrano, R., Jánosi, A., Steinbrunn, W., Pfisterer, M., Schmid, J., Sandhu, S., Guppy, K., Lee, S., & Froelicher, V. (1988). Heart Disease UCI dataset. UC Irvine Machine Learning Repository. https://archive.ics.uci.edu/dataset/45/heart+disease
-
-Carlén, A., Gustafsson, M., Åström Aneq, M., & Nylander, E. (2019). Exercise-induced ST depression in an asymptomatic population without coronary artery disease. Scandinavian Cardiovascular Journal, 53(4), 206–212. https://doi.org/10.1080/14017431.2019.1626021
-
-Fuchs, F. D., & Whelton, P. K. (2020). High Blood Pressure and Cardiovascular Disease. Hypertension, 75(2), 285–292. https://doi.org/10.1161/HYPERTENSIONAHA.119.14240
-
-Regitz-Zagrosek, V., & Gebhard, C. (2023). Gender medicine: Effects of sex and gender on cardiovascular disease manifestation and outcomes. Nature Reviews Cardiology, 20(4), 236–247. https://doi.org/10.1038/s41569-022-00797-4
-
