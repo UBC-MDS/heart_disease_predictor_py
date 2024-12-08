@@ -89,6 +89,28 @@ To simplify the setup process, we have created a Docker container that includes 
 2. To run the analysis, run the following commands:
 ```
 python scripts/download_data.py --url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" --path="data/raw"
+
+python scripts/split_n_preprocess.py \
+--input-path=data/raw/processed.cleveland.data \
+--data-dir=data/processed \
+--preprocessor-dir=results/models \
+--seed=522
+
+python scripts/script_eda.py --input_data_path data/processed/heart_disease_train.csv --output_prefix results/eda_output
+
+python scripts/fit_heart_disease_predictor.py \
+    --train-set=data/processed/heart_disease_train.csv \
+    --preprocessor=results/models/heart_disease_preprocessor.pickle \
+    --pipeline-to=results/models \
+    --table-to=results/tables \
+    --seed=522
+
+python scripts/evaluate_heart_disease_predictor.py \
+    --test-set=data/processed/heart_disease_test.csv \
+    --pipeline-svc-from=results/models/heart_disease_svc_pipeline.pickle \
+    --pipeline-lr-from=results/models/heart_disease_lr_pipeline.pickle \
+    --table-to=results/tables \
+    --seed=522
 ```
 3. To render the Quarto markdown file to html and pdf, use the following commands:
 ```
