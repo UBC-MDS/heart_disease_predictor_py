@@ -120,21 +120,21 @@ Additionally, it records potential signs of heart disease, such as chest pain ty
 
 The dataset contains **303 observations**, and the original study used a Bayesian model to estimate the probability of having heart disease [@Detrano1988].
 
-As shown in Figure @fig-numeric-distributions, the numeric features of the dataset have varying distributions, which provide an overview of the data's spread and tendencies.
+As shown in @fig-numeric-distributions, the numeric features of the dataset have varying distributions, which provide an overview of the data's spread and tendencies.
 
-![Distribution of numeric features in the dataset.](../results/figures/raw_feature_distributions.png){#fig-numeric-distributions width=100%}  
+![Distribution of numeric features in the dataset.](../results/figures/raw_feature_distributions.png){#fig-numeric-distributions width=70%}  
 
-The target variable (`num`) is distributed as displayed in Figure @fig-target-distribution, where the majority of the samples are classified into the lower categories of heart disease.
+The target variable (`num`) is distributed as displayed in @fig-target-distribution, where the majority of the samples are classified into the lower categories of heart disease.
 
-![Distribution of the target variable (`num`).](../results/figures/target_variable_distribution.png){#fig-target-distribution width=90%}  
+![Distribution of the target variable (`num`).](../results/figures/target_variable_distribution.png){#fig-target-distribution width=75%}  
 
-For categorical features, the grouped distributions based on the presence of heart disease are shown in Figure @fig-categorical-distributions. These stacked bar plots illustrate the relationship between categorical variables and the target variable.
+For categorical features, the grouped distributions based on the presence of heart disease are shown in @fig-categorical-distributions. These stacked bar plots illustrate the relationship between categorical variables and the target variable.
 
-![Distribution of categorical features grouped by heart disease (`num`).](../results/figures/categorical_features_distribution.png){#fig-categorical-distributions width=100%}  
+![Distribution of categorical features grouped by heart disease (`num`).](../results/figures/categorical_features_distribution.png){#fig-categorical-distributions width=70%}  
 
-Boxplots for selected numeric features grouped by the target variable (num) are presented in Figure @fig-boxplots-class, offering insights into the spread and central tendencies of the selected features for each heart disease category.
+Boxplots for selected numeric features grouped by the target variable (num) are presented in @fig-boxplots-class, offering insights into the spread and central tendencies of the selected features for each heart disease category.
 
-![Boxplots of selected numeric features grouped by heart disease (`num`).](../results/figures/raw_boxplots_by_class.png){#fig-boxplots-class width=90%}  
+![Boxplots of selected numeric features grouped by heart disease (`num`).](../results/figures/raw_boxplots_by_class.png){#fig-boxplots-class width=75%}  
 
 
 ```{=html}
@@ -202,7 +202,7 @@ To better understand the relationship between each feature and heart disease pre
 
 ![Coefficient Table for Logistic Regression](../results/figures/log_reg_feature_coefficients.png){#fig-logreg-coefficients width=85%}  
 
-In Figure @fig-logreg-coefficients, we can see that features like `ca`, `oldpeak`, and `trestbps` have relatively high positive coefficients, meaning they strongly influence the prediction of heart disease. This makes sense, as research shows that high blood pressure is one of the most important causes of heart disease [@Fuchs2020]. For oldpeak specifically, research shows that ST depression during exercise is linked to higher risk of heart disease[@Carlen2019]. In contrast, features like `thalach` have large negative coefficients, suggesting they are linked to a lower likelihood of heart disease. Features like `age` and `chol`, however, show little impact, as their coefficients are close to zero.
+In @fig-logreg-coefficients, we can see that features like `ca`, `oldpeak`, and `trestbps` have relatively high positive coefficients, meaning they strongly influence the prediction of heart disease. This makes sense, as research shows that high blood pressure is one of the most important causes of heart disease [@Fuchs2020]. For oldpeak specifically, research shows that ST depression during exercise is linked to higher risk of heart disease[@Carlen2019]. In contrast, features like `thalach` have large negative coefficients, suggesting they are linked to a lower likelihood of heart disease. Features like `age` and `chol`, however, show little impact, as their coefficients are close to zero.
 
 Interestingly, females (`sex` = 0) are more likely to be free of heart disease, as indicated by the large negative coefficient for `onehotencoder__sex_0.0`. In contrast, males (`sex` = 1) are more likely to have heart disease, as reflected by the high positive coefficient for `onehotencoder__sex_1.0`. This is supported by @Regitz-Zagrosek2023, which highlights how biological sex differences, such as premenopausal women having a relative protection from coronary artery disease.
 

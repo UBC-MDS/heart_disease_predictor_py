@@ -187,44 +187,44 @@ div.csl-indent {
 <p>These features include various physiological parameters, such as: - <strong>Resting blood pressure</strong>, - <strong>Serum cholesterol levels</strong>, - <strong>Maximum heart rate achieved</strong>.</p>
 <p>Additionally, it records potential signs of heart disease, such as chest pain type (<code>cp</code>) and exercise-induced angina (<code>exang</code>).</p>
 <p>The dataset contains <strong>303 observations</strong>, and the original study used a Bayesian model to estimate the probability of having heart disease <span class="citation" data-cites="Detrano1988">(<a href="#ref-Detrano1988" role="doc-biblioref">Detrano et al. 1988</a>)</span>.</p>
-<p>As shown in Figure <a href="#fig-numeric-distributions" class="quarto-xref">Figure&nbsp;1</a>, the numeric features of the dataset have varying distributions, which provide an overview of the data’s spread and tendencies.</p>
+<p>As shown in <a href="#fig-numeric-distributions" class="quarto-xref">Figure&nbsp;1</a>, the numeric features of the dataset have varying distributions, which provide an overview of the data’s spread and tendencies.</p>
 <div id="fig-numeric-distributions" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-numeric-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/raw_feature_distributions.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../results/figures/raw_feature_distributions.png" class="img-fluid figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-numeric-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Distribution of numeric features in the dataset.
 </figcaption>
 </figure>
 </div>
-<p>The target variable (<code>num</code>) is distributed as displayed in Figure <a href="#fig-target-distribution" class="quarto-xref">Figure&nbsp;2</a>, where the majority of the samples are classified into the lower categories of heart disease.</p>
+<p>The target variable (<code>num</code>) is distributed as displayed in <a href="#fig-target-distribution" class="quarto-xref">Figure&nbsp;2</a>, where the majority of the samples are classified into the lower categories of heart disease.</p>
 <div id="fig-target-distribution" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-target-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/target_variable_distribution.png" class="img-fluid figure-img" style="width:90.0%">
+<img src="../results/figures/target_variable_distribution.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-target-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Distribution of the target variable (<code>num</code>).
 </figcaption>
 </figure>
 </div>
-<p>For categorical features, the grouped distributions based on the presence of heart disease are shown in Figure <a href="#fig-categorical-distributions" class="quarto-xref">Figure&nbsp;3</a>. These stacked bar plots illustrate the relationship between categorical variables and the target variable.</p>
+<p>For categorical features, the grouped distributions based on the presence of heart disease are shown in <a href="#fig-categorical-distributions" class="quarto-xref">Figure&nbsp;3</a>. These stacked bar plots illustrate the relationship between categorical variables and the target variable.</p>
 <div id="fig-categorical-distributions" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-categorical-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/categorical_features_distribution.png" class="img-fluid figure-img" style="width:100.0%">
+<img src="../results/figures/categorical_features_distribution.png" class="img-fluid figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-categorical-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Distribution of categorical features grouped by heart disease (<code>num</code>).
 </figcaption>
 </figure>
 </div>
-<p>Boxplots for selected numeric features grouped by the target variable (num) are presented in Figure <a href="#fig-boxplots-class" class="quarto-xref">Figure&nbsp;4</a>, offering insights into the spread and central tendencies of the selected features for each heart disease category.</p>
+<p>Boxplots for selected numeric features grouped by the target variable (num) are presented in <a href="#fig-boxplots-class" class="quarto-xref">Figure&nbsp;4</a>, offering insights into the spread and central tendencies of the selected features for each heart disease category.</p>
 <div id="fig-boxplots-class" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-boxplots-class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/raw_boxplots_by_class.png" class="img-fluid figure-img" style="width:90.0%">
+<img src="../results/figures/raw_boxplots_by_class.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-boxplots-class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: Boxplots of selected numeric features grouped by heart disease (<code>num</code>).
@@ -248,7 +248,7 @@ Figure&nbsp;4: Boxplots of selected numeric features grouped by heart disease (<
 Table&nbsp;1: Baseline Model CV Results
 </figcaption>
 <div aria-describedby="tbl-baseline_cv_results_df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="50">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="12">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 21%">
@@ -309,7 +309,7 @@ Table&nbsp;1: Baseline Model CV Results
 Table&nbsp;2: Best Model CV Results
 </figcaption>
 <div aria-describedby="tbl-best_model_cv_results_df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="51">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="13">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 21%">
@@ -364,7 +364,7 @@ Table&nbsp;2: Best Model CV Results
 Table&nbsp;3: Test Score Results
 </figcaption>
 <div aria-describedby="tbl-test_scores_df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="53">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="15">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
@@ -399,7 +399,7 @@ Table&nbsp;3: Test Score Results
 Table&nbsp;4: Detailed Coefficients for Logistic Regression
 </figcaption>
 <div aria-describedby="tbl-coefficient_df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="54">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="16">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
@@ -552,7 +552,7 @@ Figure&nbsp;5: Coefficient Table for Logistic Regression
 </figcaption>
 </figure>
 </div>
-<p>In Figure <a href="#fig-logreg-coefficients" class="quarto-xref">Figure&nbsp;5</a>, we can see that features like <code>ca</code>, <code>oldpeak</code>, and <code>trestbps</code> have relatively high positive coefficients, meaning they strongly influence the prediction of heart disease. This makes sense, as research shows that high blood pressure is one of the most important causes of heart disease <span class="citation" data-cites="Fuchs2020">(<a href="#ref-Fuchs2020" role="doc-biblioref">Fuchs and Whelton 2020</a>)</span>. For oldpeak specifically, research shows that ST depression during exercise is linked to higher risk of heart disease<span class="citation" data-cites="Carlen2019">(<a href="#ref-Carlen2019" role="doc-biblioref">Carlen et al. 2019</a>)</span>. In contrast, features like <code>thalach</code> have large negative coefficients, suggesting they are linked to a lower likelihood of heart disease. Features like <code>age</code> and <code>chol</code>, however, show little impact, as their coefficients are close to zero.</p>
+<p>In <a href="#fig-logreg-coefficients" class="quarto-xref">Figure&nbsp;5</a>, we can see that features like <code>ca</code>, <code>oldpeak</code>, and <code>trestbps</code> have relatively high positive coefficients, meaning they strongly influence the prediction of heart disease. This makes sense, as research shows that high blood pressure is one of the most important causes of heart disease <span class="citation" data-cites="Fuchs2020">(<a href="#ref-Fuchs2020" role="doc-biblioref">Fuchs and Whelton 2020</a>)</span>. For oldpeak specifically, research shows that ST depression during exercise is linked to higher risk of heart disease<span class="citation" data-cites="Carlen2019">(<a href="#ref-Carlen2019" role="doc-biblioref">Carlen et al. 2019</a>)</span>. In contrast, features like <code>thalach</code> have large negative coefficients, suggesting they are linked to a lower likelihood of heart disease. Features like <code>age</code> and <code>chol</code>, however, show little impact, as their coefficients are close to zero.</p>
 <p>Interestingly, females (<code>sex</code> = 0) are more likely to be free of heart disease, as indicated by the large negative coefficient for <code>onehotencoder__sex_0.0</code>. In contrast, males (<code>sex</code> = 1) are more likely to have heart disease, as reflected by the high positive coefficient for <code>onehotencoder__sex_1.0</code>. This is supported by <span class="citation" data-cites="Regitz-Zagrosek2023">Regitz-Zagrosek and Gebhard (<a href="#ref-Regitz-Zagrosek2023" role="doc-biblioref">2023</a>)</span>, which highlights how biological sex differences, such as premenopausal women having a relative protection from coronary artery disease.</p>
 <p>However, there are some limitations of this study. First of all, as categorical features were split into multiple binary columns, interpreting the coefficients for these encoded variables can be tricky. It can be difficult to directly correlate the coefficients with the original feature, and whether this approach is reasonable should also be questioned.</p>
 <p>Additionally, while the model’s coefficients offer useful insights, they should be taken with caution. Further exploration into feature relationships and more advanced modeling techniques might be required to better understand the complexities of predicting heart disease.</p>
@@ -563,7 +563,7 @@ Figure&nbsp;5: Coefficient Table for Logistic Regression
 Table&nbsp;5: Misclassified Examples
 </figcaption>
 <div aria-describedby="tbl-misclassified_examples_df-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="55">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="17">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 2%">
