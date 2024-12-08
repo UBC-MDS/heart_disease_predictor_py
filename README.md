@@ -79,20 +79,46 @@ To simplify the setup process, we have created a Docker container that includes 
      - This will start a Jupyter Notebook server that you can access in your browser at `http://localhost:8888`.
      - The `-v $(pwd):/home/jovyan/work` option mounts your current directory into the container so that you can access your project files.
 
-3. **Using Jupyter Lab**
-   - Once the container is running, Jupyter Lab should open in your browser. You can run the analysis by navigating to `src/heart_disease_predictor_report.ipynb` and executing the cells as you would on your local setup.
-
 
 ### Running the Analysis
 
 1. Navigate to the root of this project on your computer using the command line.
-2. Open the Jupyter notebook to start the analysis:
-    ```bash
-    jupyter lab src/heart_disease_predictor_report.ipynb
-    ```
-3. Execute the notebook cells to run the data wrangling, EDA, and modeling steps.
-   - Make sure the kernel is set to the appropriate environment (`heart_disease_predictor`).
-   - You can select "Restart Kernel and Run All Cells" from the "Kernel" menu to execute all steps in the analysis sequentially.
+2. To run the analysis, run the following commands:
+```
+python scripts/download_data.py \
+    --url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" \
+    --path="data/raw"
+
+python scripts/split_n_preprocess.py \
+    --input-path=data/raw/processed.cleveland.data \
+    --data-dir=data/processed \
+    --preprocessor-dir=results/models \
+    --seed=522
+
+python scripts/script_eda.py \
+    --input_data_path data/processed/heart_disease_train.csv \
+    --output_prefix results/
+
+python scripts/fit_heart_disease_predictor.py \
+    --train-set=data/processed/heart_disease_train.csv \
+    --preprocessor=results/models/heart_disease_preprocessor.pickle \
+    --pipeline-to=results/models \
+    --table-to=results/tables \
+    --seed=522
+
+python scripts/evaluate_heart_disease_predictor.py \
+    --test-set=data/processed/heart_disease_test.csv \
+    --pipeline-svc-from=results/models/heart_disease_svc_pipeline.pickle \
+    --pipeline-lr-from=results/models/heart_disease_lr_pipeline.pickle \
+    --table-to=results/tables \
+    --plot-to=results/plots \
+    --seed=522
+```
+3. To render the Quarto markdown file to html and pdf, use the following commands:
+```
+quarto render report/heart_disease_predictor_report.qmd --to html
+quarto render report/heart_disease_predictor_report.qmd --to pdf
+```
  
  
 ### Updating the Docker Container
