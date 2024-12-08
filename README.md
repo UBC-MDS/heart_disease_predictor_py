@@ -88,7 +88,9 @@ To simplify the setup process, we have created a Docker container that includes 
 1. Navigate to the root of this project on your computer using the command line.
 2. To run the analysis, run the following commands:
 ```
-python scripts/download_data.py --url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" --path="data/raw"
+python scripts/download_data.py \
+--url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" \
+--path="data/raw"
 
 python scripts/split_n_preprocess.py \
 --input-path=data/raw/processed.cleveland.data \
@@ -96,7 +98,9 @@ python scripts/split_n_preprocess.py \
 --preprocessor-dir=results/models \
 --seed=522
 
-python scripts/script_eda.py --input_data_path data/processed/heart_disease_train.csv --output_prefix results/
+python scripts/script_eda.py \
+--input_data_path data/processed/heart_disease_train.csv \
+--output_prefix results/
 
 python scripts/fit_heart_disease_predictor.py \
     --train-set=data/processed/heart_disease_train.csv \
