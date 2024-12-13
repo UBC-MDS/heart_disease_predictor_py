@@ -47,34 +47,16 @@ all: $(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR)
 # 		--input_file=INPUT_PATH \
 # 		--output_file=$(FIGURES_DIR)/eda_output_categorical_features_distribution.png
 
-# Target for generating models
-$(MODELS_DIR)/heart_disease_preprocessor.pickle: scripts/split_n_preprocess.py data/raw/processed.cleveland.data
+$(MODELS_DIR)/heart_disease_preprocessor.pickle $(TABLES_DIR)/heart_disease_test.csv \
+$(TABLES_DIR)/heart_disease_train.csv $(TABLES_DIR)/scaled_heart_disease_test.csv \
+$(TABLES_DIR)/scaled_heart_disease_train.csv: scripts/split_n_preprocess.py data/raw/processed.cleveland.data
 	python scripts/split_n_preprocess.py \
-		--input_file=data/raw/processed.cleveland.data \
-		--output_file=$(MODELS_DIR)/heart_disease_preprocessor.pickle
+		--input-path=data/raw/processed.cleveland.data \
+		--data-dir=data/processed \
+		--preprocessor-dir=$(MODELS_DIR) \
+		--seed=522
 
-# Target for generating csv
-$(TABLES_DIR)/heart_disease_test.csv: scripts/split_n_preprocess.py data/raw/processed.cleveland.data 
-	python scripts/split_n_preprocess.py \
-		--input_file=data/raw/processed.cleveland.data \
-		--output_file=processed/heart_disease_test.csv
-
-$(TABLES_DIR)/heart_disease_train.csv: scripts/split_n_preprocess.py data/raw/processed.cleveland.data 
-	python scripts/split_n_preprocess.py \
-		--input_file=data/raw/processed.cleveland.data \
-		--output_file=processed/heart_disease_train.csv
-
-$(TABLES_DIR)/scaled_heart_disease_test.csv: scripts/split_n_preprocess.py data/raw/processed.cleveland.data 
-	python scripts/split_n_preprocess.py \
-		--input_file=data/raw/processed.cleveland.data \
-		--output_file=processed/scaled_heart_disease_test.csv
-
-$(TABLES_DIR)/scaled_heart_disease_train.csv: scripts/split_n_preprocess.py data/raw/processed.cleveland.data 
-	python scripts/split_n_preprocess.py \
-		--input_file=data/raw/processed.cleveland.data \
-		--output_file=processed/scaled_heart_disease_train.csv
-
-$(HTML_FILE) $(REPORT_FILES_DIR): $(RESULTS_DIR) $(BIB_FILE)
+$(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR) : $(RESULTS_DIR) $(BIB_FILE)
 	quarto render $(QMD_FILE)
 
 # $(PDF_FILE): $(QMD_FILE) $(BIB_FILE)
