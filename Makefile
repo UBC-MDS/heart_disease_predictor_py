@@ -74,14 +74,14 @@ $(TABLES_DIR)/scaled_heart_disease_train.csv: scripts/split_n_preprocess.py data
 		--input_file=data/raw/processed.cleveland.data \
 		--output_file=processed/scaled_heart_disease_train.csv
 
-$(HTML_FILE) $(REPORT_FILES_DIR): RESULTS_DIR/ $(BIB_FILE)
-    quarto render $(QMD_FILE)
+$(HTML_FILE) $(REPORT_FILES_DIR): $(RESULTS_DIR) $(BIB_FILE)
+	quarto render $(QMD_FILE)
 
 # $(PDF_FILE): $(QMD_FILE) $(BIB_FILE)
 #     quark $(QMD_FILE) --to pdf --output $(PDF_FILE) --bibliography $(BIB_FILE)
 
 # Clean generated files
 clean:
-    rm -f $(EDA_FIGURES) $(MODELS) $(TABLES)
-    rm -rf $(REPORT_FILES_DIR)
+	rm -f $(EDA_FIGURES) $(MODELS) $(TABLES)
+	rm -rf $(REPORT_FILES_DIR)
 	rm -rf data/processed
