@@ -1,7 +1,7 @@
 import os
 import sys
 import pytest
-import pandas as pd
+import shutil
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.read_zip import read_zip
 
@@ -27,10 +27,16 @@ def test_read_zip_txt_csv():
     for file in test_files_txt_csv:
         file_path = os.path.join('tests/test_zip_empty', file)
         assert os.path.isfile(file_path)
+    
     # clean up unzipped files
     for file in test_files_txt_csv:
-        if os.path.exists(file):
-            os.remove(file)
+        file_path = os.path.join('tests/test_zip_empty', file)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+    
+    # take down folder
+    if os.path.exists('tests/test_zip_empty'):
+        shutil.rmtree('tests/test_zip_empty')
 
 # test read_zip function can download and extract a zip file containing two files of two different types
 # into a directory that already contains a file
@@ -40,7 +46,13 @@ def test_read_zip_txt_csv_nonempty():
     for file in test_files_txt_csv_nonempty:
         file_path = os.path.join('tests/test_zip_file', file)
         assert os.path.isfile(file_path)
+    
     # clean up unzipped files
-    for file in test_files_txt_csv:
-        if os.path.exists(file):
-            os.remove(file)
+    for file in test_files_txt_csv_nonempty:
+        file_path = os.path.join('tests/test_zip_file', file)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+    # take down folder
+    if os.path.exists('tests/test_zip_file'):
+        shutil.rmtree('tests/test_zip_file')
