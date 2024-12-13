@@ -1,24 +1,22 @@
-import pandas as pd
 import click
 import os
-import requests
-import zipfile
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from src.read_zip import read_zip
+
+def extract(url, path):
+    """Downloads data zip data from the web to a local filepath and extracts it."""
+    try:
+        read_zip(url, path)
+    except:
+        os.makedirs(path)
+        read_zip(url, path)
 
 @click.command()
-@click.option('--url', type=str)
-@click.option('--path', type=str)
+@click.option('--url', type=str, help="The URL of the dataset to be downloaded")
+@click.option('--path', type=str, help="The path to directory to write the raw data to")
 def main(url, path):
-    request = requests.get(url)
-    filename_from_url = os.path.basename(url)
-    
-    # write the zip file to the directory
-    path_to_zip_file = os.path.join(path, filename_from_url)
-    with open(path_to_zip_file, 'wb') as f:
-        f.write(request.content)
-        
-    # extract the zip file to the directory
-    with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
-        zip_ref.extractall(path)
+    extract(url, path)
 
 if __name__ == '__main__':
     main()
