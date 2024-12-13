@@ -163,7 +163,7 @@ To simplify running multiple containers or configuring ports/volumes, Docker Com
 2. **Running with Docker Compose**
    - Use the following command to launch the container with Docker Compose:
      ```bash
-     docker-compose up
+     docker compose up
      ```
    - This will start the container, mapping the necessary ports and volumes as specified in the `docker-compose.yml` file.
 
