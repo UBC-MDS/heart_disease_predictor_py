@@ -56,6 +56,31 @@ $(TABLES_DIR)/scaled_heart_disease_train.csv: scripts/split_n_preprocess.py data
 		--preprocessor-dir=$(MODELS_DIR) \
 		--seed=522
 
+# Generating tables and pipelines as pickles in fit_heart_disease_predictor.py
+$(TABLES_DIR)/baseline_cv_results.csv \
+$(TABLES_DIR)/best_model_cv_results.csv \
+$(MODELS_DIR)/heart_disease_lr_pipeline.pickle \
+$(MODELS_DIR)/heart_disease_svc_pipeline.pickle: data/processed/heart_disease_train.csv $(MODELS_DIR)/heart_disease_preprocessor.pickle
+	python scripts/fit_heart_disease_predictor.py \
+		--train-set=data/processed/heart_disease_train.csv \
+		--preprocessor=$(MODELS_DIR)/heart_disease_preprocessor.pickle \
+		--pipeline-to=$(MODELS_DIR) \
+		--table-to=$(TABLES_DIR) \
+		--seed=522
+
+# Generating tables and figures in evaluate_heart_disease_predictor.py
+$(TABLES_DIR)/test_score.csv \
+$(TABLES_DIR)/coefficient_df.csv \
+$(TABLES_DIR)/misclassified_examples.csv \
+$(FIGURES_DIR)/log_reg_feature_coefficients.png: data/processed/heart_disease_test.csv $(MODELS_DIR)/heart_disease_svc_pipeline.pickle $(MODELS_DIR)/heart_disease_lr_pipeline.pickle
+	python scripts/evaluate_heart_disease_predictor.py \
+		--test-set=data/processed/heart_disease_test.csv \
+		--pipeline-svc-from=$(MODELS_DIR)/heart_disease_svc_pipeline.pickle \
+		--pipeline-lr-from=$(MODELS_DIR)/heart_disease_lr_pipeline.pickle \
+		--table-to=$(TABLES_DIR) \
+		--plot-to=$(FIGURES_DIR) \
+		--seed=522
+
 $(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR) : $(RESULTS_DIR) $(BIB_FILE)
 	quarto render $(QMD_FILE)
 
@@ -63,6 +88,7 @@ $(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR) : $(RESULTS_DIR) $(BIB_FILE)
 #     quark $(QMD_FILE) --to pdf --output $(PDF_FILE) --bibliography $(BIB_FILE)
 
 # Clean generated files
+# Question: Should we also clean the html & pdf reports as well?
 clean:
 	rm -f $(EDA_FIGURES) $(MODELS) $(TABLES)
 	rm -rf $(REPORT_FILES_DIR)
