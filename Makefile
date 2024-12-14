@@ -47,6 +47,15 @@ all: $(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR)
 # 		--input_file=INPUT_PATH \
 # 		--output_file=$(FIGURES_DIR)/eda_output_categorical_features_distribution.png
 
+# Download data from UCI repository
+data/raw/heart_disease.zip: | data/raw
+	python scripts/download_data.py \
+		--url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" \
+		--path="data/raw"
+
+data/raw:
+	mkdir -p data/raw
+
 $(MODELS_DIR)/heart_disease_preprocessor.pickle $(TABLES_DIR)/heart_disease_test.csv \
 $(TABLES_DIR)/heart_disease_train.csv $(TABLES_DIR)/scaled_heart_disease_test.csv \
 $(TABLES_DIR)/scaled_heart_disease_train.csv: scripts/split_n_preprocess.py data/raw/processed.cleveland.data
