@@ -61,6 +61,12 @@ For a complete list of dependencies, refer to the `environment.yml` file.
 ### Prerequisites
 - Install [Conda](https://docs.conda.io/en/latest/miniconda.html) to handle dependencies.
 
+### Clone the Repository
+
+```
+git clone https://github.com/UBC-MDS/heart_disease_predictor_py.git
+```
+
 ### Using the Docker Container
 
 To simplify the setup process, we have created a Docker container that includes all necessary dependencies for the Heart Disease Predictor project. Follow the steps below to use the container:
