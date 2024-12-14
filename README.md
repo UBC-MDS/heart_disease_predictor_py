@@ -41,7 +41,7 @@ Additional features capture other physiological details, each potentially releva
 ---
 
 ## Report
-The final report summarizing our findings and model development can be found [here](./src/heart_disease_predictor_report.ipynb).
+The final report summarizing our findings and model development can be found [here](https://ubc-mds.github.io/heart_disease_predictor_py/).
 
 ---
 
