@@ -1,7 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+import sys
 import click
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from src.setup_logger import setup_logger
+
 
 # Define function to perform EDA
 def perform_eda(input_data_path, output_prefix):
@@ -92,12 +96,20 @@ def perform_eda(input_data_path, output_prefix):
 
     print("EDA completed. Summary statistics and grouped plots are saved.")
 
+
 # Use click to handle command-line arguments
 @click.command()
 @click.option('--input_data_path', type=click.Path(exists=True), required=True, help='Path to the input CSV data file')
 @click.option('--output_prefix', type=click.Path(), required=True, help='Output file prefix for generated visualizations and tables')
 def main(input_data_path, output_prefix):
-    perform_eda(input_data_path, output_prefix)
+    logger = setup_logger(os.path.basename(__file__))
+
+    try:
+        perform_eda(input_data_path, output_prefix)
+    except Exception as e:
+        logger.exception("An error occurred: %s", e)
+        raise
+
 
 if __name__ == "__main__":
     main()
