@@ -111,7 +111,7 @@ python scripts/evaluate_heart_disease_predictor.py \
     --pipeline-svc-from=results/models/heart_disease_svc_pipeline.pickle \
     --pipeline-lr-from=results/models/heart_disease_lr_pipeline.pickle \
     --table-to=results/tables \
-    --plot-to=results/plots \
+    --plot-to=results/figures \
     --seed=522
 ```
 3. To render the Quarto markdown file to html and pdf, use the following commands:
