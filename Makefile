@@ -1,7 +1,6 @@
 .PHONY: clean
 # Directories
 RESULTS_DIR = results
-PLOTS_DIR = $(RESULTS_DIR)/plots
 FIGURES_DIR = $(RESULTS_DIR)/figures
 MODELS_DIR = $(RESULTS_DIR)/models
 TABLES_DIR = $(RESULTS_DIR)/tables
@@ -79,7 +78,7 @@ $(FIGURES_DIR)/log_reg_feature_coefficients.png: data/processed/heart_disease_te
 		--pipeline-svc-from=$(MODELS_DIR)/heart_disease_svc_pipeline.pickle \
 		--pipeline-lr-from=$(MODELS_DIR)/heart_disease_lr_pipeline.pickle \
 		--table-to=$(TABLES_DIR) \
-		--plot-to=$(PLOTS_DIR) \
+		--plot-to=$(FIGURES_DIR) \
 		--seed=522
 
 $(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR) : $(RESULTS_DIR) $(BIB_FILE)
