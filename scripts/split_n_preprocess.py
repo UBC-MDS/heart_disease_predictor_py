@@ -7,6 +7,7 @@ import requests
 import zipfile
 import warnings
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+from setup_logger import setup_logger
 from load_data import load_data
 from validate_column_names import validate_column_names
 from check_missing_values import check_missing_values
@@ -20,6 +21,7 @@ from sklearn import set_config
 from sklearn.model_selection import train_test_split
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
+
 
 @click.command()
 @click.option('--input-path', required=True, help="Path to input file")
@@ -54,28 +56,35 @@ def main(input_path, data_dir, preprocessor_dir, seed):
         "thal",      
         "num"  
     ]
-    
-    heart_disease = load_data(input_path, colnames)
-    validate_column_names(heart_disease, colnames)
-    check_missing_values(heart_disease)
-    validate_schema(heart_disease)
-    process_target_variable(heart_disease)
-    
-    np.random.seed(seed)
-    set_config(transform_output="pandas")
-    heart_disease_train, heart_disease_test = train_test_split(
-        heart_disease, train_size=0.70, stratify=heart_disease["num"]
-    )
-    
-    save_processed_data(heart_disease_train, heart_disease_test, data_dir)
 
-    # Create and save the preprocessor
-    heart_disease_preprocessor = create_preprocessor()
-    save_pickle(heart_disease_preprocessor, preprocessor_dir, filename="heart_disease_preprocessor.pickle")
+    logger = setup_logger(os.path.basename(__file__))
+    try:
+        heart_disease = load_data(input_path, colnames)
+        validate_column_names(heart_disease, colnames)
+        check_missing_values(heart_disease)
+        validate_schema(heart_disease)
+        process_target_variable(heart_disease)
+        
+        np.random.seed(seed)
+        set_config(transform_output="pandas")
+        heart_disease_train, heart_disease_test = train_test_split(
+            heart_disease, train_size=0.70, stratify=heart_disease["num"]
+        )
+        
+        save_processed_data(heart_disease_train, heart_disease_test, data_dir)
 
-    # Fit and scale the datasets, then save them
-    heart_disease_preprocessor.fit(heart_disease_train)
-    scale_and_save_data(heart_disease_preprocessor, heart_disease_train, heart_disease_test, data_dir)
+        # Create and save the preprocessor
+        heart_disease_preprocessor = create_preprocessor()
+        save_pickle(heart_disease_preprocessor, preprocessor_dir, filename="heart_disease_preprocessor.pickle")
+
+        # Fit and scale the datasets, then save them
+        heart_disease_preprocessor.fit(heart_disease_train)
+        scale_and_save_data(heart_disease_preprocessor, heart_disease_train, heart_disease_test, data_dir)
+
+    except Exception as e:
+        logger.exception("An error occurred: %s", e)
+        raise
+
 
 if __name__ == '__main__':
     main()
