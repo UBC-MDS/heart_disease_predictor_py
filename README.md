@@ -41,7 +41,7 @@ Additional features capture other physiological details, each potentially releva
 ---
 
 ## Report
-The final report summarizing our findings and model development can be found [here](./src/heart_disease_predictor_report.ipynb).
+The final report summarizing our findings and model development can be found [here](https://ubc-mds.github.io/heart_disease_predictor_py/).
 
 ---
 
@@ -60,6 +60,12 @@ For a complete list of dependencies, refer to the `environment.yml` file.
 
 ### Prerequisites
 - Install [Conda](https://docs.conda.io/en/latest/miniconda.html) to handle dependencies.
+
+### Clone the Repository
+
+```
+git clone https://github.com/UBC-MDS/heart_disease_predictor_py.git
+```
 
 ### Using the Docker Container
 
@@ -111,7 +117,7 @@ python scripts/evaluate_heart_disease_predictor.py \
     --pipeline-svc-from=results/models/heart_disease_svc_pipeline.pickle \
     --pipeline-lr-from=results/models/heart_disease_lr_pipeline.pickle \
     --table-to=results/tables \
-    --plot-to=results/plots \
+    --plot-to=results/figures \
     --seed=522
 ```
 3. To render the Quarto markdown file to html and pdf, use the following commands:
@@ -163,7 +169,7 @@ To simplify running multiple containers or configuring ports/volumes, Docker Com
 2. **Running with Docker Compose**
    - Use the following command to launch the container with Docker Compose:
      ```bash
-     docker-compose up
+     docker compose up
      ```
    - This will start the container, mapping the necessary ports and volumes as specified in the `docker-compose.yml` file.
 

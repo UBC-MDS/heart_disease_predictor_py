@@ -84,6 +84,20 @@ They are encoded in the dataset as follows:
 - \#51 (thal)
 - \#58 (num) (the predicted attribute)
 
+## Preprocessing
+
+The preprocessing steps are crucial for preparing the heart disease dataset for analysis and model training. This section outlines the steps taken to clean and transform the raw data before it is split into training and test datasets.
+
+Firstly, directories are created to store raw and processed data. If the directories do not already exist, they are created programmatically. 
+
+Next, the heart disease dataset is downloaded as a ZIP file from the UCI Machine Learning Repository. Once downloaded, the ZIP file is extracted to the raw directory.
+
+After extraction, the dataset is read into a Pandas DataFrame. The column names are defined manually, as the dataset does not include a header row. At this point, it was noted that the raw dataset uses the string '?' to represent missing values. These values are replaced with NaN to facilitate proper handling during further analysis.
+
+As briefly mentioned in the above section, the target variable, `num`, represents the presence or absence of heart disease. The original values of num range from 0 to 4, where any value greater than 1 indicates the presence of heart disease. To simplify the analysis, all values greater than 1 are mapped to 1 (i.e., indicating the presence of heart disease).
+
+Finally, to prepare the dataset for model training and evaluation, it is split into training and test subsets. The split is done in a 70/30 ratio, with stratification to ensure that the distribution of the target variable num is preserved in both subsets. The resulting training and test sets are then saved as CSV files for future use such as in the next steps, which will involve analyzing the data, training models, and assessing their performance.
+
 ## Analysis
 
 In this project, we used the Logistic Regression, SVC, Decision Tree, and Dummy Classifier as a baseline to build a classification model aimed at predicting the presence of heart disease based on clinical features. We used all available features from the dataset, excluding some variables related to the error of certain measurements. The data was split into a training set (70%) and a test set (30%). To choose the best value for the hyperparameter k, we used 5-fold cross-validation, with accuracy as the classification metric. We also standardized the data before fitting the model to ensure the features were on a similar scale. The analysis was carried out using Python, with the following libraries: NumPy, Pandas, scikit-learn, and Matplotlib.
