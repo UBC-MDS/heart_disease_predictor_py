@@ -41,11 +41,10 @@ TABLES = $(TABLES_DIR)/baseline_cv_results.csv \
 # Default target
 all: $(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR)
 
-# Target for generating figures (assuming scripts or commands to create them)
-# $(FIGURES_DIR)/eda_output_categorical_features_distribution.png:
-# 	python scripts/SCRIPT_NAME \
-# 		--input_file=INPUT_PATH \
-# 		--output_file=$(FIGURES_DIR)/eda_output_categorical_features_distribution.png
+$(FIGURES_DIR)/eda_output_numeric_boxplots.png: scripts/script_eda.py data/processed/heart_disease_train.csv
+	python scripts/script_eda.py \
+		--input-data-path=data/processed/heart_disease_train.csv \
+		--output-prefix=$(RESULTS_DIR)
 
 $(MODELS_DIR)/heart_disease_preprocessor.pickle $(TABLES_DIR)/heart_disease_test.csv \
 $(TABLES_DIR)/heart_disease_train.csv $(TABLES_DIR)/scaled_heart_disease_test.csv \
