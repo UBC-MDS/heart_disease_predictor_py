@@ -39,7 +39,7 @@ Creative commons license was listed for project report but MIT license is missin
 
 ---
 
-### Milestone 1 - 3. Reproducibility: fix environment name in README.md to activate environment correctly
+### Milestone 1 - 3. Reproducibility: fix environment name in `README.md` to activate environment correctly
 
 **Feedback:**  
 Usage documentation could be improved for clarity (i.e., it is not explicitly clear to the user how to use the project, or some of the wording is confusing, some guessing and/or trial and error had to be performed to run the project).
@@ -97,11 +97,11 @@ The reproducibility is great! I was able to docker compose up your docker image.
 
 ---
 
-## 2. [Feedback from Peer Review](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14) 🔧
+## 2. Feedback from Peer Review 🔧
 
 ### 2.1 Missing Cloning Instructions
 
-**Feedback 1 from [Yasmin Hassan](https://github.com/yasmin2424):**  
+**[Feedback 1 from Yasmin Hassan](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2529925481):**  
 Your instructions for running the analysis lack a critical step. You need to include instructions on how to clone your repository to ensure users can properly access and run your work.
 
 **Response and Changes Made:**
@@ -112,13 +112,12 @@ Your instructions for running the analysis lack a critical step. You need to inc
 **Evidence:**
 
 - [Commit #2822eb1](https://github.com/UBC-MDS/heart_disease_predictor_py/commit/2822eb1dfb8b6f17a59ac3b79d608665f87f69d5): Addressed the missing cloning instructions in the `README.md` by adding a `Clone the Repository` section.
-- [Response to Yasmin's Feedback](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2543367111)
 
 ---
 
 ### 2.2 Script Errors and Docker Configuration Issue
 
-**Feedback 2 from [Yasmin Hassan](https://github.com/yasmin2424):**  
+**[Feedback 2 from Yasmin Hassan](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2529925481):**  
 When running the scripts directly, they fail with errors like:
 python: can't open file '/home/jovyan/scripts/download_data.py': [Errno 2] No such file or directory
 This happens because your docker-compose.yml file points to an incorrect working directory. I recommend editing the file to ensure it always points to .:/home/jovyan/.
@@ -136,7 +135,7 @@ This happens because your docker-compose.yml file points to an incorrect working
 
 ### 2.3 Error Logging
 
-**Feedback 3 from [Yasmin Hassan](https://github.com/yasmin2424):**  
+**[Feedback 3 from Yasmin Hassan](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2529925481):**  
 Instead of printing errors directly to the console, consider outputting them to a log file (e.g., validation_error.log). Printing errors as output may lead to them being overlooked, but logging them ensures they are properly documented and can be reviewed as needed.
 
 **Response and Changes Made:**
@@ -150,6 +149,104 @@ Instead of printing errors directly to the console, consider outputting them to 
 
 ---
 
-## Conclusion📝
+### 2.4 Figures do not load in html file
 
-This changelog summarizes all changes made to the project based on the feedback received. Each section is linked to the specific commits or file paths that demonstrate the improvements.
+**[Feedback 4 from Yichun Liu](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2533112540):**  
+The figures display fine in the pdf file, but none of them are displayed properly in the html file. You might want to go back and check the format and/or location of the picture files.
+
+**Response and Changes Made:**
+
+- Corrected figure names and paths to ensure compatibility with HTML output. Now all figures should display properly in both HTML and PDF formats.
+- [Response to Yichun's Feedback](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2545713814)
+  
+**Evidence:**
+
+- [heart_disease_predictor_report.html](https://github.com/UBC-MDS/heart_disease_predictor_py/blob/main/report/heart_disease_predictor_report.html): It should correctly display all the figures now.
+
+---
+
+### 2.5 Unclear installation instructions
+
+**[Feedback 5 from Yichun Liu](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2533112540):**  
+In the `README.md` file, there are several lines about installation scattered throughout, but it lacks a cohesive section that guides the reader through the installation process step-by-step.
+
+**Response and Changes Made:**
+
+- Reorganized the "Installation and Setup" section in `README.md` to provide detailed, step-by-step instructions for setting up the environment and running the pipeline.
+- [Response to Yichun's Feedback](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2545713814)
+  
+**Evidence:**
+
+- [Commit #13074c4](https://github.com/UBC-MDS/heart_disease_predictor_py/commit/13074c45c29a48f2e023974bb7e2f422ebaefe3b): Guide the reader through the installation process step by step.
+
+---
+
+### 2.6 Preliminary processing
+
+**[Feedback 6 from Yichun Liu](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2533112540):**  
+Although included in the codes, there is no specific section in the report in regard of how you pre-processed the raw data. It could be improved by providing a clear description on how you dealt with the missing values, relabeled the target, etc.
+
+**Response and Changes Made:**
+
+- Added a comprehensive "Preprocessing" section to the report, detailing data cleaning, handling of missing values, target variable relabeling, and dataset splitting to enhance clarity and reproducibility.
+- [Response to Yichun's Feedback](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2545713814)
+  
+**Evidence:**
+
+- [Commit #9adb403](https://github.com/UBC-MDS/heart_disease_predictor_py/commit/9adb4033d547bb4be9159cfaf368239215083fb9): Added a detailed "Preprocessing" section to all of our final reports.
+
+---
+
+### 2.7 Docker Commands Update
+
+**[Feedback 7 from Jiayi Li](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2533710986):**  
+I would suggest using `docker compose up` instead of  `docker-compose up`. `docker compose` is the new command integrated into the Docker CLI starting with Docker version 20.10, while `docker-compose` is the older, standalone tool. Although docker-compose remains compatible, it is considered legacy and may not receive updates in the future. Same applies to `docker compose down` instead of `docker-compose down`.
+
+**Response and Changes Made:**
+
+- Updated the `README.md` to use `docker compose up` instead of `docker-compose up`, to stay align with the latest Docker CLI standards.
+- [Response to Jiayi's Feedback](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2543368346)
+  
+**Evidence:**
+
+- [Commit #cb82aef](https://github.com/UBC-MDS/heart_disease_predictor_py/commit/cb82aefc5fe93e2d0aaa7576901e5944e553b8de#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5L166-R166): Updated the `README.md` to use `docker compose up` instead of `docker-compose up`.
+
+---
+
+### 2.8 Amend Report Link
+
+**[Feedback 8 from Jiayi Li](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2533710986):**  
+The listed report link in the README (https://github.com/UBC-MDS/heart_disease_predictor_py/blob/main/src/heart_disease_predictor_report.ipynb) is broken. Should be replaced with the latest report link, preferably a hosted Quarto report.
+
+**Response and Changes Made:**
+
+- The broken report link has been replaced with the updated GitHub Pages report link.
+- [Response to Jiayi's Feedback](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2543368346)
+  
+**Evidence:**
+
+- [README.md](https://github.com/UBC-MDS/heart_disease_predictor_py/blob/8070d1b28ef6e3a8fa822922e807647a5344a7cb/README.md?plain=1#L36): Line 36 shows the correct latest GitHub Pages report link.
+
+---
+
+### 2.9 Streamline Docstring Styles
+
+**[Feedback 9 from Jiayi Li](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2533710986):**  
+In /scripts, there are multiple styles of docstrings used. For example, `split_n_preprocess` (used Google style) differs in style to `fit_heart_disease_predictor` (Used Numpydoc style). A consistent style should be used throughout the project. I would suggest using the Numpydoc style, which is a widely used style for docstrings in Python.
+
+**Response and Changes Made:**
+
+- Converted the Google style docstrings in `split_n_preprocess.py` to Numpydoc style. (Please review the function docstrings in the `src` directory, as our functions are now modularized in individual script files.)
+- [Response to Jiayi's Feedback](https://github.com/UBC-MDS/data-analysis-review-2024/issues/14#issuecomment-2543368346)
+  
+**Evidence:**
+
+- [Commit #3a12512](https://github.com/UBC-MDS/heart_disease_predictor_py/commit/3a125129fb53b83f0d3bdc8c36ebcd7cefed6f97): All docstrings of functions used in `split_n_preprocess.py` have been updated to match the Numpydoc style used in `fit_heart_disease_predictor`, ensuring consistency across the project.
+
+---
+
+## Conclusion 📝
+
+We've reached the finish line! This changelog highlights all the improvements we’ve made to the project based on the helpful feedback we received. From making things clearer to fixing issues and ensuring everything works smoothly, each change has made the project stronger.
+
+Each section links to specific commits or files, showing the steps we took to improve. Thank you to everyone who shared feedback and helped along the way. 🥂🎉

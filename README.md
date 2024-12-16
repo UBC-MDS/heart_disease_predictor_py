@@ -97,10 +97,11 @@ If you prefer a containerized environment, use our pre-built Docker image that i
 
 #### Steps
 
-1. Go to the root of this project in the terminal and then run:
-```bash
-docker compose up
-```
+1. **Run the Docker Container**
+Go to the root of this project in the terminal and then run:
+   ```bash
+   docker compose up
+   ```
 2. **Run the Analysis (Make Targets)**  
    - To start fresh (remove previously generated files):
      ```bash
@@ -166,6 +167,16 @@ If you prefer not to use `make`, you can manually run each step after setting up
    quarto render report/heart_disease_predictor_report.qmd --to html
    quarto render report/heart_disease_predictor_report.qmd --to pdf
    ```
+
+---
+
+## Run the Tests
+
+After ensuring that you are in the project root directory, you can run the tests in the terminal with the following command:
+   ```bash
+   pytest
+   ```
+This will execute all the test scripts located in the `tests/` directory within the Docker container.
 
 ---
 
