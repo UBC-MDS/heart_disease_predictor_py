@@ -10,38 +10,30 @@
 
 ## About
 
-The **Heart Disease Predictor** project aims to build a reliable machine learning model that predicts the presence of heart disease based on a set of patient health measurements. This project employs data wrangling, exploratory data analysis (EDA), and classification techniques to explore the dataset and develop an accurate model.
+The **Heart Disease Predictor** project aims to build a reliable machine learning model that predicts the presence of heart disease based on patient health measurements. It involves data wrangling, exploratory data analysis (EDA), and classification techniques to find meaningful patterns and build an accurate model.
 
-The dataset used in this project is sourced from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/heart+Disease). The dataset consists of 303 patient records, each including 13 attributes such as age, cholesterol levels, chest pain type, and maximum heart rate achieved. The target variable (`num`) indicates the presence or absence of heart disease. Our goal is to predict the target variable effectively, helping to assess patients' heart health in a clinical setting.
+The dataset is sourced from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/heart+Disease) and contains 303 patient records with 13 attributes related to heart health. Our model’s goal is to predict heart disease presence to assist clinicians in assessing risk.
 
 ---
 
 ## Project Objectives
-- **Data Wrangling**: Preprocess the raw dataset to prepare it for analysis.
-- **Exploratory Data Analysis (EDA)**: Investigate relationships between patient features and heart disease presence.
+- **Data Wrangling**: Preprocess the raw dataset for analysis.
+- **Exploratory Data Analysis (EDA)**: Examine key relationships among features.
 - **Model Development**: Train and evaluate a classification model to predict heart disease.
-- **Evaluation**: Assess the model's performance using metrics like accuracy, confusion matrices, and more.
+- **Evaluation**: Assess model performance using accuracy, confusion matrices, and other metrics.
 
-Our final classifier achieved an overall accuracy of ~87%, which, while promising, indicates further improvements can be made for real-world applicability. False negatives (missed heart disease) remain a primary concern, as they could lead to underdiagnosis.
+Our current classifier achieves ~87% accuracy, though improvements could enhance clinical usefulness—especially reducing false negatives.
 
 ---
 
 ## Dataset Details
 
-The heart disease dataset was originally collected by researchers from four different institutions and compiled by researchers at the Cleveland Clinic Foundation. The attributes in the dataset include:
-- **Age**: Patient age in years.
-- **Sex**: Gender of the patient.
-- **Chest Pain Type (cp)**: Type of chest pain experienced (four categories).
-- **Resting Blood Pressure (trestbps)**: Blood pressure at rest.
-- **Cholesterol Level (chol)**: Serum cholesterol in mg/dl.
-- **Max Heart Rate (thalach)**: Maximum heart rate achieved during exercise.
-
-Additional features capture other physiological details, each potentially relevant to heart disease diagnosis.
+The dataset includes various features (e.g., age, sex, chest pain type, resting blood pressure, cholesterol, max heart rate) that have been used to study risk factors related to heart disease.
 
 ---
 
 ## Report
-The final report summarizing our findings and model development can be found [here](https://ubc-mds.github.io/heart_disease_predictor_py/).
+A summary of the findings and model development can be found in the [final report](https://ubc-mds.github.io/heart_disease_predictor_py/).
 
 ---
 
@@ -52,159 +44,183 @@ The final report summarizing our findings and model development can be found [he
 - [Matplotlib](https://matplotlib.org/)
 - [Scikit-Learn](https://scikit-learn.org/stable/)
 
-For a complete list of dependencies, refer to the `environment.yml` file.
+A complete list of dependencies is in the `environment.yml` file.
 
 ---
 
-## Setup Instructions
+## Installation and Setup
 
-### Prerequisites
-- Install [Conda](https://docs.conda.io/en/latest/miniconda.html) to handle dependencies.
+You can set up and run this project in two main ways:
 
-### Clone the Repository
+1. **Local Environment (using Conda)**
+2. **Using Docker (with or without Docker Compose)**
 
-```
-git clone https://github.com/UBC-MDS/heart_disease_predictor_py.git
-```
+Choose the approach that best fits your environment.
 
-### Using the Docker Container
+### 1. Local Environment with Conda
 
-To simplify the setup process, we have created a Docker container that includes all necessary dependencies for the Heart Disease Predictor project. Follow the steps below to use the container:
+#### Prerequisites
+- Install [Conda](https://docs.conda.io/en/latest/miniconda.html) to manage dependencies.
 
-1. **Pull the Docker Image**
-   - Make sure Docker is installed on your machine. You can pull the latest version of the Docker image from DockerHub by running:
+#### Steps
+
+1. **Clone the Repository**  
+   ```bash
+   git clone https://github.com/UBC-MDS/heart_disease_predictor_py.git
+   cd heart_disease_predictor_py
+   ```
+   
+2. **Create and Activate the Environment**  
+   ```bash
+   conda env create -f environment.yml
+   conda activate heart_disease_predictor
+   ```
+
+3. **Run the Analysis (Make Targets)**  
+   - To start fresh (remove previously generated files):
      ```bash
-     docker pull achalim/heart_disease_predictor_py:latest
+     make clean
      ```
-
-2. **Run the Docker Container**
-   - To start a container instance using the pulled image, run:
+   - To run the entire pipeline and produce the final outputs:
      ```bash
-     docker run -p 8888:8888 -v $(pwd):/home/jovyan/work achalim/heart_disease_predictor_py:latest
+     make all
      ```
-     - This will start a Jupyter Notebook server that you can access in your browser at `http://localhost:8888`.
-     - The `-v $(pwd):/home/jovyan/work` option mounts your current directory into the container so that you can access your project files.
+   
+   This will download data, preprocess it, run EDA, train and evaluate models, and render the report.
 
+### 2. Using Docker
 
-### Running the Analysis
+If you prefer a containerized environment, use our pre-built Docker image that includes all dependencies.
 
-1. Navigate to the root of this project on your computer using the command line.
-2. To reset the project to a clean state (i.e., remove all files generated from previous analysis runs), use the following command:
+#### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) installed on your system.
+
+#### Steps
+
+1. **Pull the Docker Image**  
+   ```bash
+   docker pull achalim/heart_disease_predictor_py:latest
+   ```
+   
+2. **Run the Docker Container**  
+   ```bash
+   docker run -p 8888:8888 -v $(pwd):/home/jovyan/work achalim/heart_disease_predictor_py:latest
+   ```
+   
+   Access the Jupyter Notebook at `http://localhost:8888`. The current directory is mounted inside the container, allowing you to run `make all` or other commands inside the notebook or a terminal within the container.
+
+#### Using Docker Compose (Optional)
+If you need more complex configurations, create a `docker-compose.yml` file:
+
+```yaml
+version: '3'
+services:
+  heart_disease_predictor:
+    image: achalim/heart_disease_predictor_py:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/home/jovyan/work
 ```
-make clean
+
+Then run:
+```bash
+docker compose up
 ```
-3. To execute the complete analysis, run the following command:
-```
-make all
-```
 
-If you want to run the analysis manually:
-4. To run the analysis manually, run the following commands:
-```
-python scripts/download_data.py \
-    --url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" \
-    --path="data/raw"
+---
 
-python scripts/split_n_preprocess.py \
-    --input-path=data/raw/processed.cleveland.data \
-    --data-dir=data/processed \
-    --preprocessor-dir=results/models \
-    --seed=522
+## Running the Analysis Manually (Without Make)
 
-python scripts/script_eda.py \
-    --input_data_path data/processed/heart_disease_train.csv \
-    --output_prefix results/
+If you prefer not to use `make`, you can manually run each step after setting up your environment (via Conda or Docker):
 
-python scripts/fit_heart_disease_predictor.py \
-    --train-set=data/processed/heart_disease_train.csv \
-    --preprocessor=results/models/heart_disease_preprocessor.pickle \
-    --pipeline-to=results/models \
-    --table-to=results/tables \
-    --seed=522
+1. **Download the Data**
+   ```bash
+   python scripts/download_data.py \
+       --url="https://archive.ics.uci.edu/static/public/45/heart_disease.zip" \
+       --path="data/raw"
+   ```
 
-python scripts/evaluate_heart_disease_predictor.py \
-    --test-set=data/processed/heart_disease_test.csv \
-    --pipeline-svc-from=results/models/heart_disease_svc_pipeline.pickle \
-    --pipeline-lr-from=results/models/heart_disease_lr_pipeline.pickle \
-    --table-to=results/tables \
-    --plot-to=results/figures \
-    --seed=522
-```
-5. To render the Quarto markdown file to html and pdf manually, use the following commands:
-```
-quarto render report/heart_disease_predictor_report.qmd --to html
-quarto render report/heart_disease_predictor_report.qmd --to pdf
-```
- 
- 
-### Updating the Docker Container
+2. **Split and Preprocess the Data**
+   ```bash
+   python scripts/split_n_preprocess.py \
+       --input-path=data/raw/processed.cleveland.data \
+       --data-dir=data/processed \
+       --preprocessor-dir=results/models \
+       --seed=522
+   ```
 
-If there are changes in the codebase or dependencies, follow the steps below to update the container:
+3. **Perform EDA**
+   ```bash
+   python scripts/script_eda.py \
+       --input_data_path=data/processed/heart_disease_train.csv \
+       --output_prefix=results/
+   ```
 
-1. **Update the Dependencies**
-   - If any changes are made to the `environment.yml` file, you must regenerate the `conda-lock` file to pin the versions of the updated dependencies:
-     ```bash
-     conda-lock install --name heart_disease_predictor --file environment.yml
-     ```
+4. **Fit the Predictive Models**
+   ```bash
+   python scripts/fit_heart_disease_predictor.py \
+       --train-set=data/processed/heart_disease_train.csv \
+       --preprocessor=results/models/heart_disease_preprocessor.pickle \
+       --pipeline-to=results/models \
+       --table-to=results/tables \
+       --seed=522
+   ```
 
-2. **Rebuild the Docker Image**
-   - Make sure the updated `environment.yml` and `Dockerfile` reflect the latest changes, then rebuild the Docker image using the command:
-     ```bash
-     docker build -t achalim/heart_disease_predictor_py:latest .
-     ```
+5. **Evaluate the Models and Generate Figures**
+   ```bash
+   python scripts/evaluate_heart_disease_predictor.py \
+       --test-set=data/processed/heart_disease_test.csv \
+       --pipeline-svc-from=results/models/heart_disease_svc_pipeline.pickle \
+       --pipeline-lr-from=results/models/heart_disease_lr_pipeline.pickle \
+       --table-to=results/tables \
+       --plot-to=results/figures \
+       --seed=522
+   ```
 
-3. **Push the Updated Image**
-   - To make the updated image available to others, push it to DockerHub:
-     ```bash
-     docker push achalim/heart_disease_predictor_py:latest
-     ```
+6. **Render the Report**
+   ```bash
+   quarto render report/heart_disease_predictor_report.qmd --to html
+   quarto render report/heart_disease_predictor_report.qmd --to pdf
+   ```
 
-### Using Docker Compose 
+---
 
-To simplify running multiple containers or configuring ports/volumes, Docker Compose can be used. Here is how you can use Docker Compose:
+## Updating Dependencies and Docker Image
 
-1. **Docker Compose File**
-   - Create a `docker-compose.yml` file in the root of your repository that defines the services required:
-     ```yaml
-     version: '3'
-     services:
-       heart_disease_predictor:
-         image: achalim/heart_disease_predictor_py:latest
-         ports:
-           - "8888:8888"
-         volumes:
-           - .:/home/jovyan/work
-     ```
+1. **Add/Update Dependencies**  
+   Edit `environment.yml` and then regenerate the conda lock file:
+   ```bash
+   conda-lock install --name heart_disease_predictor --file environment.yml
+   ```
 
-2. **Running with Docker Compose**
-   - Use the following command to launch the container with Docker Compose:
-     ```bash
-     docker compose up
-     ```
-   - This will start the container, mapping the necessary ports and volumes as specified in the `docker-compose.yml` file.
+2. **Rebuild the Docker Image** (if using Docker)  
+   ```bash
+   docker build -t achalim/heart_disease_predictor_py:latest .
+   docker push achalim/heart_disease_predictor_py:latest
+   ```
 
+---
 
+## Clean Up
 
-### Clean up
-- To exit the container and delete all the resources, type Ctrl + C in the terminal, and then type
+- To clean generated files (figures, models, tables):
   ```bash
-  docker compose rm
+  make clean
   ```
-- To deactivate the environment:
-    ```bash
-    conda deactivate
-    ```
 
-### Adding a New Dependency
+- To deactivate the conda environment:
+  ```bash
+  conda deactivate
+  ```
 
-1. Add the new dependency to the `environment.yml` file in a separate branch.
-2. Regenerate the `conda-lock` file:
-    ```bash
-    conda-lock install --name heart_disease_predictor --file environment.yml
-    ```
-3. Test the updated environment and push your changes.
+- To stop and remove Docker containers:
+  ```bash
+  docker compose down
+  ```
 
 ---
+
 
 ## License
 
