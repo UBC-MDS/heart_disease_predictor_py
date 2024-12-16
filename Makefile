@@ -62,7 +62,7 @@ $(EDA_FIGURES) $(TABLES_DIR)/eda_output_summary_stats.csv: scripts/script_eda.py
 		--output_prefix=$(RESULTS_DIR)
 
 # Train models
-$(TABLES_DIR)/baseline_cv_results.csv $(TABLES_DIR)/best_model_cv_results.csv $(MODELS): data/processed/heart_disease_train.csv $(MODELS_DIR)/heart_disease_preprocessor.pickle
+$(TABLES_DIR)/baseline_cv_results.csv $(TABLES_DIR)/best_model_cv_results.csv $(MODELS_DIR)/heart_disease_lr_pipeline.pickle $(MODELS_DIR)/heart_disease_svc_pipeline.pickle: data/processed/heart_disease_train.csv $(MODELS_DIR)/heart_disease_preprocessor.pickle
 	python scripts/fit_heart_disease_predictor.py \
 		--train-set=data/processed/heart_disease_train.csv \
 		--preprocessor=$(MODELS_DIR)/heart_disease_preprocessor.pickle \
@@ -81,7 +81,7 @@ $(TABLES_DIR)/test_score.csv $(TABLES_DIR)/coefficient_df.csv $(TABLES_DIR)/misc
 		--seed=522
 
 # Render report
-$(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR): $(TABLES) $(MODELS) $(EDA_FIGURES) $(ANALYSIS_FIGURES) $(BIB_FILE)
+$(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR): $(TABLES) $(MODELS) $(ANALYSIS_FIGURES) $(BIB_FILE)
 	quarto render $(QMD_FILE)
 
 # Clean generated files
