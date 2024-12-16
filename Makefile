@@ -62,6 +62,15 @@ data/raw/heart_disease.zip: | data/raw
 data/raw:
 	mkdir -p data/raw
 
+# Download data from UCI repository
+data/raw/heart_disease.zip: | data/raw
+	python scripts/download_data.py \
+		--url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" \
+		--path="data/raw"
+
+data/raw:
+	mkdir -p data/raw
+
 $(MODELS_DIR)/heart_disease_preprocessor.pickle $(TABLES_DIR)/heart_disease_test.csv \
 $(TABLES_DIR)/heart_disease_train.csv $(TABLES_DIR)/scaled_heart_disease_test.csv \
 $(TABLES_DIR)/scaled_heart_disease_train.csv: scripts/split_n_preprocess.py data/raw/processed.cleveland.data
@@ -97,7 +106,11 @@ $(FIGURES_DIR)/log_reg_feature_coefficients.png: data/processed/heart_disease_te
 		--plot-to=$(FIGURES_DIR) \
 		--seed=522
 
+<<<<<<< HEAD
 $(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR): $(TABLES) $(MODELS) $(EDA_FIGURES) $(BIB_FILE)
+=======
+$(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR) : $(RESULTS_DIR) $(BIB_FILE)
+>>>>>>> 34d2f7ba5555affba5c82614e7d7e181c2e24b65
 	quarto render $(QMD_FILE)
 
 # $(PDF_FILE): $(QMD_FILE) $(BIB_FILE)
