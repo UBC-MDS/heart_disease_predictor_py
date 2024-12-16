@@ -1,4 +1,3 @@
-version: '3'
 services:
   jupyter-notebook:
     image: achalim/heart_disease_predictor_py:e5a77f6
