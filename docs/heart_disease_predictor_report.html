@@ -130,7 +130,7 @@
         <div class="quarto-alternate-formats">
           <h2>Other Formats</h2>
           <ul>
-            <li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li>
+            <li><a href="heart_disease_predictor_report.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li>
           </ul>
         </div>
       </nav>
@@ -196,8 +196,7 @@
           particular<span class="citation" data-cites="Bui2024">(<a href="#ref-Bui2024" role="doc-biblioref">Bui
               2024</a>)</span>. As such, early detection of heart disease, not to mention increased understanding of and
           heightened mindfulness around mitigating the risk factors for heart disease, can help improve countless lives
-          in the United States and elsewhere.
-        </p>
+          in the United States and elsewhere.</p>
         <p>Here we ask if we can use a machine learning algorithm to predict whether an individual has the presence of
           heart disease given a relevant selection of their bioinformatic data. Answering this question is important
           because both patients and their health teams can seek to benefit from tooling and technologies that help in
@@ -317,8 +316,7 @@
           </ul>
           <p>Out of the 13 features: - <strong>8 are categorical</strong> (e.g., <code>sex</code>, <code>cp</code>,
             <code>thal</code>). - <strong>5 are numeric</strong> (e.g., <code>age</code>, <code>chol</code>,
-            <code>thalach</code>).
-          </p>
+            <code>thalach</code>).</p>
           <p>These features include various physiological parameters, such as: - <strong>Resting blood
               pressure</strong>, - <strong>Serum cholesterol levels</strong>, - <strong>Maximum heart rate
               achieved</strong>.</p>
@@ -333,7 +331,7 @@
           <div id="fig-numeric-distributions" class="quarto-float quarto-figure quarto-figure-center anchored">
             <figure class="quarto-float quarto-float-fig figure">
               <div aria-describedby="fig-numeric-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-                <img src="results/figures/raw_feature_distributions.png" class="img-fluid figure-img"
+                <img src="results/figures/eda_output_raw_feature_distributions.png" class="img-fluid figure-img"
                   style="width:70.0%">
               </div>
               <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig"
@@ -348,7 +346,7 @@
           <div id="fig-target-distribution" class="quarto-float quarto-figure quarto-figure-center anchored">
             <figure class="quarto-float quarto-float-fig figure">
               <div aria-describedby="fig-target-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-                <img src="results/figures/target_variable_distribution.png" class="img-fluid figure-img"
+                <img src="results/figures/eda_output_target_distribution.png" class="img-fluid figure-img"
                   style="width:75.0%">
               </div>
               <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig"
@@ -363,7 +361,7 @@
           <div id="fig-categorical-distributions" class="quarto-float quarto-figure quarto-figure-center anchored">
             <figure class="quarto-float quarto-float-fig figure">
               <div aria-describedby="fig-categorical-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-                <img src="results/figures/categorical_features_distribution.png" class="img-fluid figure-img"
+                <img src="results/figures/eda_output_categorical_stacked_barplots.png" class="img-fluid figure-img"
                   style="width:70.0%">
               </div>
               <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig"
@@ -378,7 +376,8 @@
           <div id="fig-boxplots-class" class="quarto-float quarto-figure quarto-figure-center anchored">
             <figure class="quarto-float quarto-float-fig figure">
               <div aria-describedby="fig-boxplots-class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-                <img src="results/figures/raw_boxplots_by_class.png" class="img-fluid figure-img" style="width:75.0%">
+                <img src="results/figures/eda_output_numeric_boxplots.png" class="img-fluid figure-img"
+                  style="width:75.0%">
               </div>
               <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig"
                 id="fig-boxplots-class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -429,29 +428,29 @@
                       <tbody>
                         <tr class="odd">
                           <td style="text-align: left;">Dummy</td>
-                          <td style="text-align: left;">0.009 (+/- 0.003)</td>
-                          <td style="text-align: left;">0.005 (+/- 0.003)</td>
+                          <td style="text-align: left;">0.009 (+/- 0.002)</td>
+                          <td style="text-align: left;">0.004 (+/- 0.001)</td>
                           <td style="text-align: left;">0.543 (+/- 0.007)</td>
                           <td style="text-align: left;">0.542 (+/- 0.002)</td>
                         </tr>
                         <tr class="even">
                           <td style="text-align: left;">Decision tree</td>
-                          <td style="text-align: left;">0.011 (+/- 0.003)</td>
-                          <td style="text-align: left;">0.003 (+/- 0.004)</td>
+                          <td style="text-align: left;">0.009 (+/- 0.000)</td>
+                          <td style="text-align: left;">0.005 (+/- 0.001)</td>
                           <td style="text-align: left;">0.713 (+/- 0.048)</td>
                           <td style="text-align: left;">1.000 (+/- 0.000)</td>
                         </tr>
                         <tr class="odd">
                           <td style="text-align: left;">SVC</td>
-                          <td style="text-align: left;">0.010 (+/- 0.003)</td>
+                          <td style="text-align: left;">0.010 (+/- 0.001)</td>
                           <td style="text-align: left;">0.005 (+/- 0.002)</td>
                           <td style="text-align: left;">0.844 (+/- 0.043)</td>
                           <td style="text-align: left;">0.929 (+/- 0.017)</td>
                         </tr>
                         <tr class="even">
                           <td style="text-align: left;">Logistic Regression</td>
-                          <td style="text-align: left;">0.012 (+/- 0.001)</td>
-                          <td style="text-align: left;">0.005 (+/- 0.002)</td>
+                          <td style="text-align: left;">0.011 (+/- 0.001)</td>
+                          <td style="text-align: left;">0.004 (+/- 0.000)</td>
                           <td style="text-align: left;">0.849 (+/- 0.027)</td>
                           <td style="text-align: left;">0.889 (+/- 0.015)</td>
                         </tr>
@@ -492,22 +491,22 @@
                       <tbody>
                         <tr class="odd">
                           <td style="text-align: left;">Decision Tree</td>
-                          <td style="text-align: left;">0.012 (+/- 0.001)</td>
-                          <td style="text-align: left;">0.004 (+/- 0.003)</td>
+                          <td style="text-align: left;">0.009 (+/- 0.000)</td>
+                          <td style="text-align: left;">0.005 (+/- 0.000)</td>
                           <td style="text-align: left;">0.778 (+/- 0.037)</td>
                           <td style="text-align: left;">0.960 (+/- 0.014)</td>
                         </tr>
                         <tr class="even">
                           <td style="text-align: left;">SVC</td>
-                          <td style="text-align: left;">0.008 (+/- 0.003)</td>
-                          <td style="text-align: left;">0.005 (+/- 0.003)</td>
+                          <td style="text-align: left;">0.009 (+/- 0.001)</td>
+                          <td style="text-align: left;">0.005 (+/- 0.002)</td>
                           <td style="text-align: left;">0.849 (+/- 0.040)</td>
                           <td style="text-align: left;">0.875 (+/- 0.007)</td>
                         </tr>
                         <tr class="odd">
                           <td style="text-align: left;">Logistic Regression</td>
-                          <td style="text-align: left;">0.012 (+/- 0.001)</td>
-                          <td style="text-align: left;">0.006 (+/- 0.001)</td>
+                          <td style="text-align: left;">0.010 (+/- 0.003)</td>
+                          <td style="text-align: left;">0.005 (+/- 0.002)</td>
                           <td style="text-align: left;">0.858 (+/- 0.053)</td>
                           <td style="text-align: left;">0.881 (+/- 0.009)</td>
                         </tr>
@@ -742,16 +741,14 @@
                 role="doc-biblioref">Carlen et al. 2019</a>)</span>. In contrast, features like <code>thalach</code>
             have large negative coefficients, suggesting they are linked to a lower likelihood of heart disease.
             Features like <code>age</code> and <code>chol</code>, however, show little impact, as their coefficients are
-            close to zero.
-          </p>
+            close to zero.</p>
           <p>Interestingly, females (<code>sex</code> = 0) are more likely to be free of heart disease, as indicated by
             the large negative coefficient for <code>onehotencoder__sex_0.0</code>. In contrast, males (<code>sex</code>
             = 1) are more likely to have heart disease, as reflected by the high positive coefficient for
             <code>onehotencoder__sex_1.0</code>. This is supported by <span class="citation"
               data-cites="Regitz-Zagrosek2023">Regitz-Zagrosek and Gebhard (<a href="#ref-Regitz-Zagrosek2023"
                 role="doc-biblioref">2023</a>)</span>, which highlights how biological sex differences, such as
-            premenopausal women having a relative protection from coronary artery disease.
-          </p>
+            premenopausal women having a relative protection from coronary artery disease.</p>
           <p>However, there are some limitations of this study. First of all, as categorical features were split into
             multiple binary columns, interpreting the coefficients for these encoded variables can be tricky. It can be
             difficult to directly correlate the coefficients with the original feature, and whether this approach is
