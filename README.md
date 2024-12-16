@@ -89,7 +89,18 @@ To simplify the setup process, we have created a Docker container that includes 
 ### Running the Analysis
 
 1. Navigate to the root of this project on your computer using the command line.
-2. To run the analysis, run the following commands:
+2. To reset the project to a clean state, use the following command:
+```
+make clean
+```
+3. To execute the complete analysis, run the following command:
+```
+make all
+```
+
+If you want to run the analysis manually:
+
+4. To run the analysis manually, run the following commands:
 ```
 python scripts/download_data.py \
     --url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" \
@@ -120,7 +131,7 @@ python scripts/evaluate_heart_disease_predictor.py \
     --plot-to=results/figures \
     --seed=522
 ```
-3. To render the Quarto markdown file to html and pdf, use the following commands:
+5. To render the Quarto markdown file to html and pdf manually, use the following commands:
 ```
 quarto render report/heart_disease_predictor_report.qmd --to html
 quarto render report/heart_disease_predictor_report.qmd --to pdf
