@@ -19,8 +19,8 @@ EDA_FIGURES = $(FIGURES_DIR)/eda_output_categorical_features_distribution.png \
               $(FIGURES_DIR)/eda_output_categorical_stacked_barplots.png \
               $(FIGURES_DIR)/eda_output_numeric_boxplots.png \
               $(FIGURES_DIR)/eda_output_raw_feature_distributions.png \
-              $(FIGURES_DIR)/eda_output_target_distribution.png \
-              $(FIGURES_DIR)/log_reg_feature_coefficients.png
+              $(FIGURES_DIR)/eda_output_target_distribution.png
+ANALYSIS_FIGURES = $(FIGURES_DIR)/log_reg_feature_coefficients.png
 MODELS = $(MODELS_DIR)/heart_disease_lr_pipeline.pickle \
          $(MODELS_DIR)/heart_disease_preprocessor.pickle \
          $(MODELS_DIR)/heart_disease_svc_pipeline.pickle
@@ -39,7 +39,7 @@ $(RESULTS_DIR):
 	mkdir -p $(RESULTS_DIR) $(FIGURES_DIR) $(MODELS_DIR) $(TABLES_DIR)
 
 # Download raw data
-data/raw/heart_disease.zip: | data/raw
+data/raw/heart_disease.zip data/raw/processed.cleveland.data: | data/raw
 	python scripts/download_data.py \
 		--url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" \
 		--path="data/raw"
@@ -71,7 +71,7 @@ $(TABLES_DIR)/baseline_cv_results.csv $(TABLES_DIR)/best_model_cv_results.csv $(
 		--seed=522
 
 # Evaluate models
-$(TABLES_DIR)/test_score.csv $(TABLES_DIR)/coefficient_df.csv $(TABLES_DIR)/misclassified_examples.csv $(FIGURES_DIR)/log_reg_feature_coefficients.png: data/processed/heart_disease_test.csv $(MODELS)
+$(TABLES_DIR)/test_score.csv $(TABLES_DIR)/coefficient_df.csv $(TABLES_DIR)/misclassified_examples.csv $(ANALYSIS_FIGURES): data/processed/heart_disease_test.csv $(MODELS)
 	python scripts/evaluate_heart_disease_predictor.py \
 		--test-set=data/processed/heart_disease_test.csv \
 		--pipeline-svc-from=$(MODELS_DIR)/heart_disease_svc_pipeline.pickle \
@@ -81,10 +81,10 @@ $(TABLES_DIR)/test_score.csv $(TABLES_DIR)/coefficient_df.csv $(TABLES_DIR)/misc
 		--seed=522
 
 # Render report
-$(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR): $(TABLES) $(MODELS) $(EDA_FIGURES) $(BIB_FILE)
+$(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR): $(TABLES) $(MODELS) $(EDA_FIGURES) $(ANALYSIS_FIGURES) $(BIB_FILE)
 	quarto render $(QMD_FILE)
 
 # Clean generated files
 clean:
-	rm -f $(EDA_FIGURES) $(MODELS) $(TABLES) $(HTML_FILE) $(PDF_FILE)
-	rm -rf $(REPORT_FILES_DIR) data/processed
+	rm -f $(EDA_FIGURES) $(ANALYSIS_FIGURES) $(MODELS) $(TABLES) $(HTML_FILE) $(PDF_FILE)
+	rm -rf $(REPORT_FILES_DIR) data/processed data/raw
