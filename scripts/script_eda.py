@@ -1,12 +1,8 @@
 import pandas as pd
 import os
-<<<<<<< HEAD
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-=======
 import click
-import sys
->>>>>>> 34d2f7ba5555affba5c82614e7d7e181c2e24b65
 from src.generate_sum_statistics import generate_summary_statistics
 from src.plot_histograms import plot_histograms
 from src.plot_target_distribution import plot_target_distribution

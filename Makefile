@@ -106,11 +106,7 @@ $(FIGURES_DIR)/log_reg_feature_coefficients.png: data/processed/heart_disease_te
 		--plot-to=$(FIGURES_DIR) \
 		--seed=522
 
-<<<<<<< HEAD
 $(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR): $(TABLES) $(MODELS) $(EDA_FIGURES) $(BIB_FILE)
-=======
-$(HTML_FILE) $(PDF_FILE) $(REPORT_FILES_DIR) : $(RESULTS_DIR) $(BIB_FILE)
->>>>>>> 34d2f7ba5555affba5c82614e7d7e181c2e24b65
 	quarto render $(QMD_FILE)
 
 # $(PDF_FILE): $(QMD_FILE) $(BIB_FILE)
