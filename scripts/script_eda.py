@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.generate_sum_statistics import generate_summary_statistics
 from src.plot_histograms import plot_histograms
 from src.plot_target_distribution import plot_target_distribution
