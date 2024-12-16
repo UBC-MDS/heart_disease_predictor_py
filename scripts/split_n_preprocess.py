@@ -68,7 +68,7 @@ def main(input_path, data_dir, preprocessor_dir, seed):
         np.random.seed(seed)
         set_config(transform_output="pandas")
         heart_disease_train, heart_disease_test = train_test_split(
-            heart_disease, train_size=0.70, stratify=heart_disease["num"]
+            heart_disease, train_size=0.70, stratify=heart_disease["num"], random_state=seed
         )
         
         save_processed_data(heart_disease_train, heart_disease_test, data_dir)
