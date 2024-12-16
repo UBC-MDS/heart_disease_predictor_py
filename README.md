@@ -97,37 +97,20 @@ If you prefer a containerized environment, use our pre-built Docker image that i
 
 #### Steps
 
-1. **Pull the Docker Image**  
-   ```bash
-   docker pull achalim/heart_disease_predictor_py:latest
-   ```
-   
-2. **Run the Docker Container**  
-   ```bash
-   docker run -p 8888:8888 -v $(pwd):/home/jovyan/work achalim/heart_disease_predictor_py:latest
-   ```
-   
-   Access the Jupyter Notebook at `http://localhost:8888`. The current directory is mounted inside the container, allowing you to run `make all` or other commands inside the notebook or a terminal within the container.
-
-#### Using Docker Compose (Optional)
-If you need more complex configurations, create a `docker-compose.yml` file:
-
-```yaml
-version: '3'
-services:
-  heart_disease_predictor:
-    image: achalim/heart_disease_predictor_py:latest
-    ports:
-      - "8888:8888"
-    volumes:
-      - .:/home/jovyan/work
-```
-
-Then run:
+1. Go to the root of this project in the terminal and then run:
 ```bash
 docker compose up
 ```
-
+2. **Run the Analysis (Make Targets)**  
+   - To start fresh (remove previously generated files):
+     ```bash
+     make clean
+     ```
+   - To run the entire pipeline and produce the final outputs:
+     ```bash
+     make all
+     ```
+   
 ---
 
 ## Running the Analysis Manually (Without Make)
@@ -214,7 +197,7 @@ If you prefer not to use `make`, you can manually run each step after setting up
   conda deactivate
   ```
 
-- To stop and remove Docker containers:
+- To stop and remove Docker containers, use Ctrl + C in the terminal and then run this:
   ```bash
   docker compose down
   ```

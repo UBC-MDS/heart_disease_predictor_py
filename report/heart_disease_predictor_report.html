@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -81,7 +81,7 @@ div.csl-indent {
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">5</span> References</a></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../heart_disease_predictor_report.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="..\heart_disease_predictor_report.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
 <main class="content" id="quarto-document-content">
 
@@ -201,7 +201,7 @@ div.csl-indent {
 <div id="fig-numeric-distributions" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-numeric-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/raw_feature_distributions.png" class="img-fluid figure-img" style="width:70.0%">
+<img src="../results/figures/eda_output_raw_feature_distributions.png" class="img-fluid figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-numeric-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Distribution of numeric features in the dataset.
@@ -212,7 +212,7 @@ Figure&nbsp;1: Distribution of numeric features in the dataset.
 <div id="fig-target-distribution" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-target-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/target_variable_distribution.png" class="img-fluid figure-img" style="width:75.0%">
+<img src="../results/figures/eda_output_target_distribution.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-target-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Distribution of the target variable (<code>num</code>).
@@ -223,7 +223,7 @@ Figure&nbsp;2: Distribution of the target variable (<code>num</code>).
 <div id="fig-categorical-distributions" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-categorical-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/categorical_features_distribution.png" class="img-fluid figure-img" style="width:70.0%">
+<img src="../results/figures/eda_output_categorical_stacked_barplots.png" class="img-fluid figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-categorical-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Distribution of categorical features grouped by heart disease (<code>num</code>).
@@ -234,7 +234,7 @@ Figure&nbsp;3: Distribution of categorical features grouped by heart disease (<c
 <div id="fig-boxplots-class" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-boxplots-class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/raw_boxplots_by_class.png" class="img-fluid figure-img" style="width:75.0%">
+<img src="../results/figures/eda_output_numeric_boxplots.png" class="img-fluid figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-boxplots-class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: Boxplots of selected numeric features grouped by heart disease (<code>num</code>).
@@ -279,29 +279,29 @@ Table&nbsp;1: Baseline Model CV Results
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Dummy</td>
-<td style="text-align: left;">0.009 (+/- 0.003)</td>
-<td style="text-align: left;">0.005 (+/- 0.003)</td>
+<td style="text-align: left;">0.009 (+/- 0.001)</td>
+<td style="text-align: left;">0.005 (+/- 0.001)</td>
 <td style="text-align: left;">0.543 (+/- 0.007)</td>
 <td style="text-align: left;">0.542 (+/- 0.002)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Decision tree</td>
-<td style="text-align: left;">0.011 (+/- 0.003)</td>
-<td style="text-align: left;">0.003 (+/- 0.004)</td>
+<td style="text-align: left;">0.010 (+/- 0.001)</td>
+<td style="text-align: left;">0.004 (+/- 0.001)</td>
 <td style="text-align: left;">0.713 (+/- 0.048)</td>
 <td style="text-align: left;">1.000 (+/- 0.000)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">SVC</td>
-<td style="text-align: left;">0.010 (+/- 0.003)</td>
+<td style="text-align: left;">0.011 (+/- 0.002)</td>
 <td style="text-align: left;">0.005 (+/- 0.002)</td>
 <td style="text-align: left;">0.844 (+/- 0.043)</td>
 <td style="text-align: left;">0.929 (+/- 0.017)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Logistic Regression</td>
-<td style="text-align: left;">0.012 (+/- 0.001)</td>
-<td style="text-align: left;">0.005 (+/- 0.002)</td>
+<td style="text-align: left;">0.011 (+/- 0.003)</td>
+<td style="text-align: left;">0.005 (+/- 0.001)</td>
 <td style="text-align: left;">0.849 (+/- 0.027)</td>
 <td style="text-align: left;">0.889 (+/- 0.015)</td>
 </tr>
@@ -340,22 +340,22 @@ Table&nbsp;2: Best Model CV Results
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Decision Tree</td>
-<td style="text-align: left;">0.012 (+/- 0.001)</td>
-<td style="text-align: left;">0.004 (+/- 0.003)</td>
+<td style="text-align: left;">0.009 (+/- 0.001)</td>
+<td style="text-align: left;">0.004 (+/- 0.001)</td>
 <td style="text-align: left;">0.778 (+/- 0.037)</td>
 <td style="text-align: left;">0.960 (+/- 0.014)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">SVC</td>
 <td style="text-align: left;">0.008 (+/- 0.003)</td>
-<td style="text-align: left;">0.005 (+/- 0.003)</td>
+<td style="text-align: left;">0.005 (+/- 0.002)</td>
 <td style="text-align: left;">0.849 (+/- 0.040)</td>
 <td style="text-align: left;">0.875 (+/- 0.007)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Logistic Regression</td>
 <td style="text-align: left;">0.012 (+/- 0.001)</td>
-<td style="text-align: left;">0.006 (+/- 0.001)</td>
+<td style="text-align: left;">0.004 (+/- 0.000)</td>
 <td style="text-align: left;">0.858 (+/- 0.053)</td>
 <td style="text-align: left;">0.881 (+/- 0.009)</td>
 </tr>

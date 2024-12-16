@@ -136,19 +136,19 @@ The dataset contains **303 observations**, and the original study used a Bayesia
 
 As shown in @fig-numeric-distributions, the numeric features of the dataset have varying distributions, which provide an overview of the data's spread and tendencies.
 
-![Distribution of numeric features in the dataset.](../results/figures/raw_feature_distributions.png){#fig-numeric-distributions width=70%}  
+![Distribution of numeric features in the dataset.](../results/figures/eda_output_raw_feature_distributions.png){#fig-numeric-distributions width=70%}  
 
 The target variable (`num`) is distributed as displayed in @fig-target-distribution, where the majority of the samples are classified into the lower categories of heart disease.
 
-![Distribution of the target variable (`num`).](../results/figures/target_variable_distribution.png){#fig-target-distribution width=75%}  
+![Distribution of the target variable (`num`).](../results/figures/eda_output_target_distribution.png){#fig-target-distribution width=75%}  
 
 For categorical features, the grouped distributions based on the presence of heart disease are shown in @fig-categorical-distributions. These stacked bar plots illustrate the relationship between categorical variables and the target variable.
 
-![Distribution of categorical features grouped by heart disease (`num`).](../results/figures/categorical_features_distribution.png){#fig-categorical-distributions width=70%}  
+![Distribution of categorical features grouped by heart disease (`num`).](../results/figures/eda_output_categorical_stacked_barplots.png){#fig-categorical-distributions width=70%}  
 
 Boxplots for selected numeric features grouped by the target variable (num) are presented in @fig-boxplots-class, offering insights into the spread and central tendencies of the selected features for each heart disease category.
 
-![Boxplots of selected numeric features grouped by heart disease (`num`).](../results/figures/raw_boxplots_by_class.png){#fig-boxplots-class width=75%}  
+![Boxplots of selected numeric features grouped by heart disease (`num`).](../results/figures/eda_output_numeric_boxplots.png){#fig-boxplots-class width=75%}  
 
 
 ```{=html}

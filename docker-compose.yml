@@ -1,8 +1,13 @@
 version: '3'
 services:
-  heart_disease_predictor:
-    image: achalim/heart_disease_predictor_py:f4f4095
+  jupyter-notebook:
+    image: achalim/heart_disease_predictor_py:e5a77f6
     ports:
       - "8888:8888"
     volumes:
-      - .:/home/jovyan/work
+      - .:/home/jovyan
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+    platform: linux/amd64
