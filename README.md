@@ -121,17 +121,17 @@ If you prefer not to use `make`, you can manually run each step after setting up
 1. **Download the Data**
    ```bash
    python scripts/download_data.py \
-       --url="https://archive.ics.uci.edu/static/public/45/heart_disease.zip" \
-       --path="data/raw"
+   	--url="https://archive.ics.uci.edu/static/public/45/heart+disease.zip" \
+   	--path="data/raw"
    ```
 
 2. **Split and Preprocess the Data**
    ```bash
    python scripts/split_n_preprocess.py \
-       --input-path=data/raw/processed.cleveland.data \
-       --data-dir=data/processed \
-       --preprocessor-dir=results/models \
-       --seed=522
+   	--input-path=data/raw/processed.cleveland.data \
+   	--data-dir=data/processed \
+   	--preprocessor-dir=results/models \
+   	--seed=522
    ```
 
 3. **Perform EDA**
